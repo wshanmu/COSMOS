@@ -1,39 +1,36 @@
 ---
 layout: home
-title: Just the Class
+title: UCLA COSMOS Cluster 10
 nav_exclude: true
 permalink: /:path/
 seo:
   type: Course
-  name: Just the Class
+  name: UCLA COSMOS Cluster 10
 ---
 
-# Just the Class
+# UCLA COSMOS Cluster 10
 
-Just the Class is a GitHub Pages template developed for the purpose of quickly deploying course websites. In addition to serving plain web pages and files, it provides a boilerplate for:
+![IoT and data science lab bench]({{ site.baseurl }}/assets/images/iot-data-science-banner.png){: .course-banner }
 
-- [announcements](announcements.md),
-- a [course calendar](calendar.md),
-- a [staff](staff.md) page,
-- and a weekly [schedule](schedule.md).
+Cluster 10 introduces Internet of Things systems and data science through morning lectures and afternoon labs. Students move from sensor data collection and networked devices to statistical modeling, machine learning, wireless sensing, and a final group project.
 
-Just the Class is a template that extends the popular [Just the Docs](https://github.com/just-the-docs/just-the-docs) theme, which provides a robust and thoroughly-tested foundation for your website. Just the Docs include features such as:
+**Theme:** IoT + Data Science  
+**Dates:** July 6-August 1, 2026  
+**Lecture:** 9:00-11:30 AM  
+**Lab:** 1:00-5:00 PM  
+**Location:** BH7702A
 
-- automatic [navigation structure](https://just-the-docs.github.io/just-the-docs/docs/navigation-structure/),
-- instant, full-text [search](https://just-the-docs.github.io/just-the-docs/docs/search/) and page indexing,
-- and a set of [UI components](https://just-the-docs.github.io/just-the-docs/docs/ui-components) and authoring [utilities](https://just-the-docs.github.io/just-the-docs/docs/utilities).
+## Quick Links
 
-## Getting Started
+- [Calendar]({{ site.baseurl }}/calendar/)
+- [Labs]({{ site.baseurl }}/labs/)
+- [Paper List]({{ site.baseurl }}/papers/)
+- [Staff]({{ site.baseurl }}/staff/)
 
-Getting started with Just the Class is simple.
+## Course Goals
 
-1. Create a [new repository based on Just the Class](https://github.com/kevinlin1/just-the-class/generate).
-1. Update `_config.yml` and `README.md` with your course information. [Be sure to update the url and baseurl](https://mademistakes.com/mastering-jekyll/site-url-baseurl/).
-1. Configure a [publishing source for GitHub Pages](https://help.github.com/en/articles/configuring-a-publishing-source-for-github-pages). Your course website is now live!
-1. Edit and create `.md` [Markdown files](https://guides.github.com/features/mastering-markdown/) to add more content pages.
+By the end of the cluster, students should be able to collect sensor data, reason about bias and data quality, build exploratory visualizations, train and evaluate supervised learning models, and explain how modern IoT sensing systems use wireless signals, embedded hardware, and data pipelines.
 
-Just the Class has been used by instructors at Stanford University ([CS 161](https://stanford-cs161.github.io/winter2021/)), UC Berkeley ([Data 100](https://ds100.org/fa21/)), UC Santa Barbara ([CSW8](https://ucsb-csw8.github.io/s22/)), Northeastern University ([CS4530/5500](https://neu-se.github.io/CS4530-CS5500-Spring-2021/)), and Carnegie Mellon University ([17-450/17-950](https://cmu-crafting-software.github.io/)). Share your course website and find more examples in the [show and tell discussion](https://github.com/kevinlin1/just-the-class/discussions/categories/show-and-tell)!
+## Final Project
 
-### Local development environment
-
-Just the Class requires no special Jekyll plugins and can run on GitHub Pages' standard Jekyll compiler. To setup a local development environment, clone your template repository and follow the GitHub Docs on [Testing your GitHub Pages site locally with Jekyll](https://docs.github.com/en/pages/setting-up-a-github-pages-site-with-jekyll/testing-your-github-pages-site-locally-with-jekyll).
+Students will work in groups of 4. Project time begins in the final week after the core data science and IoT sensing labs, with a closing poster session on August 1.

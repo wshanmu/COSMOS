@@ -7,3 +7,15 @@ Gemfile.lock
 _site/
 node_modules/
 vendor/
+
+# Course datasets are distributed through Google Drive instead of GitHub.
+notebooks/**/*.csv
+notebooks/**/*.tsv
+notebooks/**/*.txt
+notebooks/**/*.xlsx
+notebooks/**/*.zip
+_instructor/**/*.csv
+_instructor/**/*.tsv
+_instructor/**/*.txt
+_instructor/**/*.xlsx
+_instructor/**/*.zip

@@ -1,26 +1,29 @@
 ---
 layout: page
 title: Staff
-description: A listing of all the course staff members.
+description: Course staff and learning assistants.
+nav_order: 7
 ---
 
 # Staff
 
-Staff information is stored in the `_staffers` directory and rendered according to the layout file, `_layouts/staffer.html`.
-
 ## Instructors
 
-{% assign instructors = site.staffers | where: 'role', 'Instructor' %}
-{% for staffer in instructors %}
-{{ staffer }}
-{% endfor %}
+{% assign omid = site.staffers | where: 'slug', 'omid' | first %}
+{{ omid }}
 
-{% assign teaching_assistants = site.staffers | where: 'role', 'Teaching Assistant' %}
-{% assign num_teaching_assistants = teaching_assistants | size %}
-{% if num_teaching_assistants != 0 %}
+{% assign baharan = site.staffers | where: 'slug', 'baharan' | first %}
+{{ baharan }}
+
 ## Teaching Assistants
 
-{% for staffer in teaching_assistants %}
-{{ staffer }}
-{% endfor %}
-{% endif %}
+{% assign shanmu = site.staffers | where: 'slug', 'shanmu' | first %}
+{{ shanmu }}
+
+{% assign jianhao = site.staffers | where: 'slug', 'jianhao' | first %}
+{{ jianhao }}
+
+## Learning Assistant
+
+{% assign eric = site.staffers | where: 'slug', 'eric' | first %}
+{{ eric }}

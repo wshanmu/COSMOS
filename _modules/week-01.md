@@ -1,23 +1,33 @@
 ---
-title: Introduction to Java
+title: Week 1 - Foundations
 ---
 
-Sep 28
-: [Java & Git](#)
-  : [1.1](#)
+July 6
+: **Lecture** Introduction
+  : Instructor: Baharan Mirzasoleiman / Omid Abari
+: **DS**{: .label .label-ds } [Lab 1: Python Environment and Notebook Setup]({{ site.baseurl }}/labs/lab-01/)
+  : TA: Jianhao Huang / Shanmu Wang. Final project groups will have 4 students.
 
-Sep 29
-: **Section**{: .label .label-purple }[Intro to Java](#)
-  : [Solution](#)
+July 7
+: **Lecture** Data collection and bias
+  : Instructor: Baharan Mirzasoleiman
+: **DS**{: .label .label-ds } [Lab 2: Data Analysis and Visualization]({{ site.baseurl }}/labs/lab-02/)
+  : Heart dataset. TA: Jianhao Huang.
 
-Sep 30
-: [Variables & Objects](#)
-  : [1.2](#), [2.1](#)
+July 8
+: **Lecture** IoT Short Range Connectivity: WiFi, BLE
+  : Instructor: Omid Abari
+: **IoT**{: .label .label-iot } [Lab 3: WiFi, Wireshark, and CSI Collection]({{ site.baseurl }}/labs/lab-03/)
+  : TA: Shanmu Wang.
 
-Oct 1
-: **Lab**{: .label .label-purple } [Intro to Java](#)
+July 9
+: **Lecture** KNN and linear regression
+  : Instructor: Baharan Mirzasoleiman
+: **DS**{: .label .label-ds } [Lab 4: Linear Regression and KNN Regression]({{ site.baseurl }}/labs/lab-04/)
+  : Appliance energy dataset. TA: Jianhao Huang.
 
-Oct 2
-: [Tracing, IntLists, & Recursion](#)
-  : [2.1](#)
-: **HW 1 due**{: .label .label-red }
+July 10
+: **Lecture** IoT Communication: 5G, LoRa
+  : Instructor: Omid Abari
+: **IoT**{: .label .label-iot } [Lab 5: IMU Activity and Gesture Recognition]({{ site.baseurl }}/labs/lab-05/)
+  : TA: Shanmu Wang.

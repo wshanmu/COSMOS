@@ -1,23 +1,33 @@
 ---
-title: Basic Data Structures
+title: Week 2 - Wireless Sensing and Model Evaluation
 ---
 
-Oct 5
-: [Linked Lists & Encapsulation](#)
-  : [3.1](#), [2.2](#), [2.3](#)
+July 13
+: **Lecture** Battery-Free IoT: RFID, Backscatter
+  : Instructor: Omid Abari
+: **IoT**{: .label .label-iot } [Lab 6: RFID Reader]({{ site.baseurl }}/labs/lab-06/)
+  : TA: Shanmu Wang. Form final project groups.
 
-Oct 6
-: **Section**{: .label .label-purple }[Linked Lists](#)
-  : [Solution](#)
+July 14
+: **Lecture** Model selection and cross validation
+  : Instructor: Baharan Mirzasoleiman
+: **DS**{: .label .label-ds } [Lab 7: Linear Regression Big Lab]({{ site.baseurl }}/labs/lab-07/)
+  : TA: Jianhao Huang / Shanmu Wang.
 
-Oct 7
-: [Resizing Arrays](#)
-  : [2.4](#), [2.5](#)
+July 15
+: **Lecture** IoT Localization: AoA, ToF, GPS
+  : Instructor: Omid Abari
+: Distinguished Faculty Lecture Series
+  : 3:00-5:00 PM. TA: Jianhao Huang / Shanmu Wang.
 
-Oct 8
-: **Lab**{: .label .label-purple } [Resizing Arrays](#)
+July 16
+: **Lecture** Regularization
+  : Instructor: Baharan Mirzasoleiman
+: **DS**{: .label .label-ds } [Lab 8: Train/Validation/Test Split and Polynomial Regression]({{ site.baseurl }}/labs/lab-08/)
+  : TA: Jianhao Huang.
 
-Oct 9
-: [Runtime Analysis](#)
-  : [8.1](#), [8.2](#), [8.3](#), [8.4](#)
-: **HW 2 due**{: .label .label-red }
+July 17
+: **Lecture** IoT Sensing: UWB
+  : Instructor: Omid Abari
+: **IoT**{: .label .label-iot } [Lab 9: UWB Ranging and CIR Sensing]({{ site.baseurl }}/labs/lab-09/)
+  : TA: Shanmu Wang.

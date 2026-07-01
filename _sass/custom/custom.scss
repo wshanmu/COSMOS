@@ -1,7 +1,5 @@
-// Just the Class dependencies
 @import 'card';
 
-// Just the Class styles
 @import 'announcement';
 @import 'module';
 @import 'schedule';
@@ -26,6 +24,36 @@ summary {
   @extend .btn, .btn-outline;
 
   width: 100%;
+}
+
+.course-banner {
+  border-radius: 8px;
+  display: block;
+  height: auto;
+  margin: $sp-4 0;
+  width: 100%;
+}
+
+.label-ds {
+  background-color: #2f855a;
+  color: $white;
+}
+
+.label-iot {
+  background-color: #2563eb;
+  color: $white;
+}
+
+.label-project {
+  background-color: #7c3aed;
+  color: $white;
+}
+
+.main-content table {
+  th,
+  td {
+    vertical-align: top;
+  }
 }
 
 .main-content {
