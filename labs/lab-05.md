@@ -1,7 +1,7 @@
 ---
 layout: page
 title: "Lab 5: IMU Activity and Gesture Recognition"
-description: IoT lab on IMU data collection, visualization, feature extraction, and motion classification.
+description: IoT lab on ESP32/BMI270 IMU streaming, smoothing, trajectory estimation, and motion classification.
 parent: Labs
 nav_order: 5
 ---
@@ -10,310 +10,347 @@ nav_order: 5
 
 Date: July 10  
 TA: Shanmu Wang  
-Hardware: phone IMU or TA-provided IMU board  
+Hardware: ESP32 board with BMI270 IMU  
 Total time: About 4 hours
 
 ## Goals
 
 By the end of this lab, each group should be able to:
 
-- explain what accelerometers and gyroscopes measure;
-- identify IMU axes and sampling-rate issues;
-- collect labeled motion data from an IMU sensor;
-- visualize raw acceleration and angular velocity signals;
-- segment sensor streams into sliding windows;
-- extract time-domain and frequency-domain features;
-- train and evaluate a simple motion classifier;
-- explain why activity recognition models may fail on new users or new sensor placements.
+- explain what an IMU measures and why accelerometer readings include gravity;
+- stream 6-axis IMU readings from an ESP32 over USB serial;
+- identify the physical x/y/z axes of the IMU board from accelerometer and gyroscope plots;
+- implement a moving-average filter and explain the noise-latency tradeoff;
+- explain why dead-reckoned trajectories from IMU double integration drift quickly;
+- compare raw and smoothed trajectory estimates;
+- collect short labeled IMU motion segments and train a simple live classifier.
 
-## Hardware and Software
+## Lab Code
 
-Use whichever IMU capture setup the TA provides:
+Use the student code folder distributed with the course materials:
 
-| Option | Description |
+```text
+notebooks/student/Lab_05_IMU_Activity_and_Gesture_Recognition/IMU_lab/
+```
+
+On the course website, open the [Lab 5 IMU code page]({{ site.baseurl }}/notebooks/student/Lab_05_IMU_Activity_and_Gesture_Recognition/IMU_lab/).
+
+The main files used in this lab are:
+
+| File | Purpose |
 | --- | --- |
-| Smartphone IMU | A phone sensor logger exports timestamped accelerometer and gyroscope CSV files. |
-| IMU development board | A board streams accelerometer and gyroscope values over serial, BLE, WiFi, or USB. |
-| Pre-recorded backup data | Use this if live collection fails or a sensor is unavailable. |
+| `tools/plot_imu_serial.py` | Live raw accelerometer and gyroscope plot. |
+| `tools/plot_imu_smoothed_TODO.py` | Student TODO for moving-average smoothing. |
+| `tools/capture_trajectory.py` | Captures a short motion and estimates a 2D XY trajectory. |
+| `tools/capture_trajectory_smoothed_TODO.py` | Student TODO for adding smoothing before trajectory estimation. |
+| `tools/IMU_Classifier/python_imu_segment_demo_student.py` | Student TODO for a simple 3-class IMU classifier. |
 
-Required data columns:
+The firmware has already been flashed for this lab. Students only need the Python tools unless a TA asks them to rebuild or reflash the ESP32.
 
-`timestamp_s, ax, ay, az, gx, gy, gz, label, trial_id, subject_id`
+## System Overview
 
-Recommended units:
+The lab device uses an ESP32 as the microcontroller and a BMI270 as the IMU sensor. The ESP32 communicates with the BMI270 over I2C, then prints each accelerometer and gyroscope sample over USB serial.
 
-- `ax, ay, az`: acceleration in `m/s^2` or `g`;
-- `gx, gy, gz`: angular velocity in `deg/s` or `rad/s`;
-- `timestamp_s`: seconds from the start of the recording.
+```text
+BMI270 IMU -> I2C -> ESP32 -> USB serial -> Python visualization scripts
+```
 
-Keep the units consistent across all trials.
+The firmware streams lines like:
 
-## Group Roles
+```text
+accel[g] x= 0.012 y=-0.034 z= 0.998 | gyro[dps] x= 0.10 y=-0.20 z= 0.05
+```
 
-Each group should assign:
+In the prepared firmware, the IMU is configured for approximately 100 Hz streaming, accelerometer range `+/-4 g`, and gyroscope range `+/-1000 dps`. The Python scripts parse the serial text and plot the six channels in real time.
 
-- Sensor lead: runs the logger and checks axes/sampling rate.
-- Protocol lead: reads the trial script and keeps timing consistent.
-- Data lead: names files, checks labels, and merges CSVs.
-- Modeling lead: builds plots, features, and classifier.
+## ESP-IDF Setup
 
-## Before Recording
+The ESP32 firmware is pre-flashed, so this setup is mainly for understanding the toolchain and for recovery if a board needs to be reprogrammed.
 
-1. Decide the sensor placement:
-   - phone in hand;
-   - phone in pocket;
-   - phone strapped to wrist;
-   - IMU board held in hand.
-2. Keep the placement fixed for the required dataset.
-3. Record the sensor orientation. For example: screen facing up, top of phone pointing forward.
-4. Set the sampling rate to 50-100 Hz if the logger allows it.
-5. Do a 10-second test recording and confirm all columns are present.
+1. Install or update [Visual Studio Code](https://code.visualstudio.com/).
+2. In VS Code, install the official **ESP-IDF** extension.
+3. Open the command palette:
+   - macOS: `Command+Shift+P`
+   - Windows/Linux: `Ctrl+Shift+P`
+4. Run `ESP-IDF: Open ESP-IDF Installation Manager`.
+5. Install ESP-IDF and its tools using the installer.
+6. Run `ESP-IDF: Select Current ESP-IDF Version`.
+7. Run `ESP-IDF: Doctor Command` and fix any reported setup issues.
+8. As a sanity check, run `ESP-IDF: New Project`, create a Hello World project, then build, flash, and monitor it.
 
-Do not mix placements during the required trials. A model trained on wrist data and tested on pocket data is solving a different problem.
+Common troubleshooting:
 
-## Part A: IMU Concepts and Axis Check
+- update VS Code before installing the ESP-IDF extension;
+- use a USB data cable, not a charge-only cable;
+- close any serial monitor before running a Python script, because only one program can open the port at a time;
+- select target `esp32` for the lab board;
+- avoid paths with spaces if using an older ESP-IDF version;
+- if flashing fails, unplug and reconnect the board, then select the serial port again.
 
-### 0:00-0:20 - Mini-Lesson
+Official references:
 
-An IMU usually contains:
+- [ESP-IDF Extension for VS Code installation guide](https://docs.espressif.com/projects/vscode-esp-idf-extension/en/latest/installation.html)
+- [ESP-IDF Get Started guide for ESP32](https://docs.espressif.com/projects/esp-idf/en/latest/esp32/get-started/index.html)
+- [Bosch BMI270 product page](https://www.bosch-sensortec.com/en/products/motion-sensors/imus/bmi270)
 
-- **Accelerometer:** measures specific force along x/y/z. When stationary, it still measures gravity.
+## Python Setup
+
+Open a terminal in the lab code folder:
+
+```bash
+cd notebooks/student/Lab_05_IMU_Activity_and_Gesture_Recognition/IMU_lab/tools
+```
+
+Create a Python environment if you have not already done so.
+
+macOS/Linux:
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install --upgrade pip
+python -m pip install -r requirements.txt
+```
+
+Windows PowerShell:
+
+```powershell
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m pip install --upgrade pip
+python -m pip install -r requirements.txt
+```
+
+Find the ESP32 serial port.
+
+macOS:
+
+```bash
+ls /dev/cu.usb* /dev/cu.SLAB* /dev/cu.wch* 2>/dev/null
+```
+
+Windows:
+
+```text
+Open Device Manager -> Ports (COM & LPT), then look for the new COM port.
+```
+
+Use your actual port in the commands below. Examples:
+
+- macOS: `/dev/cu.usbserial-5B1F0080901`
+- Windows: `COM5`
+
+## Four-Hour Plan
+
+### 0:00-0:20 - Demo and IMU Concepts
+
+The TA will first show the live visualization and a working classifier demo.
+
+An inertial measurement unit, or IMU, usually contains:
+
+- **Accelerometer:** measures specific force along x/y/z. When the board is stationary, one or more axes still measure gravity.
 - **Gyroscope:** measures angular velocity around x/y/z.
-- **Magnitude:** removes axis sign/orientation partially:
 
-`acc_mag = sqrt(ax^2 + ay^2 + az^2)`
+Useful checks:
 
-`gyro_mag = sqrt(gx^2 + gy^2 + gz^2)`
+- If the board is still, the acceleration magnitude should be close to `1 g`.
+- If one axis points upward, that accelerometer channel should be close to `+1 g` or `-1 g`.
+- If you rotate around one board axis, the matching gyroscope channel should have the largest response.
 
-Important limitations:
+### 0:20-0:45 - Visualize Raw 6-Axis Data
 
-- accelerometer readings include gravity;
-- gyroscope integration drifts over time;
-- sampling rates may not be perfectly constant;
-- axes depend on sensor placement and orientation;
-- hand motions vary across people.
+Run the live plot:
 
-### 0:20-0:35 - Axis Calibration
+```bash
+python plot_imu_serial.py --port YOUR_PORT --baud 115200
+```
 
-Run three quick checks:
+Replace `YOUR_PORT` with your serial port.
 
-1. Place the sensor flat and still for 5 seconds.
-2. Rotate it slowly around one axis.
-3. Shake it briefly along one axis.
+Do these tests:
 
-Plot `ax, ay, az, gx, gy, gz` for this test.
+1. Hold the board still in at least three orientations.
+2. Move the board back and forth along one physical direction.
+3. Rotate the board around each physical axis.
+4. Watch which accelerometer or gyroscope channel changes the most.
+
+Deliverable for this step: fill in a table like this.
+
+| Physical motion | Channel with strongest response | Evidence from plot |
+| --- | --- | --- |
+| Board x direction |  |  |
+| Board y direction |  |  |
+| Board z direction |  |  |
+| Rotation around x |  |  |
+| Rotation around y |  |  |
+| Rotation around z |  |  |
+
+### 0:45-1:25 - Implement Moving-Average Smoothing
+
+Raw IMU signals are noisy because of MEMS sensor noise, hand tremor, quantization, board vibration, and small timing variation. A moving average reduces high-frequency noise by replacing each new sample with the average of the most recent `N` samples.
+
+For a window of size `N`:
+
+```text
+smoothed[t] = mean(raw[t-N+1], ..., raw[t])
+```
+
+In `plot_imu_smoothed_TODO.py`, implement the `MovingAverageFilter.update()` method. The intended data structure is:
+
+- a `deque` that stores the most recent samples;
+- a `running_sum` that avoids recomputing the full sum every update;
+- one update operation that appends the newest value, removes the oldest value if the window is too long, and returns the current average.
+
+Run your version:
+
+```bash
+python plot_imu_smoothed_TODO.py --port YOUR_PORT --baud 115200 --average-window 5
+```
+
+Try at least three window sizes, such as `3`, `10`, and `30`.
 
 Checkpoint questions:
 
-- Which axis is most aligned with gravity when the sensor is flat?
-- Which gyro axis changes most during your rotation?
-- Does the logger report values at a roughly constant sampling interval?
+- Which window size removes the most visible noise?
+- Which window size creates the most delay?
+- Why is too much smoothing bad for fast gestures?
 
-## Part B: Required Motion Dataset
+### 1:25-2:15 - Capture a Short Trajectory
 
-### 0:35-1:25 - Collect Labeled Trials
+In principle, a trajectory can be estimated from acceleration:
 
-Collect five labels. Each trial should last 10 seconds.
+```text
+acceleration -> integrate once -> velocity -> integrate again -> position
+```
 
-| Label | Trial Script | Trials |
+In practice, this is difficult. Gravity is about `9.8 m/s^2`, while many hand motions create smaller linear accelerations. A small gravity-removal error or sensor bias becomes a growing velocity error after integration, then a larger position error after the second integration.
+
+Run the prepared trajectory demo:
+
+```bash
+python capture_trajectory.py --port YOUR_PORT --baud 115200 --capture-seconds 5
+```
+
+Keep the board still for one second, press `c`, then perform a short motion while the script captures data. Try:
+
+- a short straight-line motion;
+- a small square;
+- a small circle;
+- a motion that starts and ends at the same place.
+
+What the script is doing:
+
+1. Uses the pre-capture samples as a baseline for gyro bias and gravity direction.
+2. Uses gyroscope readings to update orientation during the capture.
+3. Rotates acceleration into a world frame.
+4. Subtracts gravity.
+5. Applies small deadbands and damping to reduce obvious drift.
+6. Integrates acceleration to velocity and velocity to position.
+7. Plots the reconstructed XY path.
+
+Thinking question: why does this lab visualize only the 2D XY trajectory instead of a full 3D path?
+
+### 2:15-2:50 - Add Smoothing Before Trajectory Estimation
+
+Copy the moving-average idea from `plot_imu_smoothed_TODO.py` into `capture_trajectory_smoothed_TODO.py`.
+
+Run:
+
+```bash
+python capture_trajectory_smoothed_TODO.py --port YOUR_PORT --baud 115200 --capture-seconds 5 --average-window 5
+```
+
+Compare the raw and smoothed trajectories for the same type of motion.
+
+Deliverable for this step:
+
+- one screenshot or sketch of a raw trajectory;
+- one screenshot or sketch of a smoothed trajectory;
+- a short answer: does smoothing solve trajectory drift, or does it only reduce part of the noise?
+
+Expected observation: smoothing can make the path less jittery, but it cannot remove constant bias, imperfect gravity subtraction, orientation error, or integration drift. A very large window can also lag behind the real motion.
+
+### 2:50-3:40 - Train a Simple IMU Motion Classifier
+
+Open the classifier folder:
+
+```bash
+cd IMU_Classifier
+python -m pip install -r requirements-python.txt
+```
+
+Run the student version:
+
+macOS/Linux:
+
+```bash
+./run_student.sh --port YOUR_PORT --classes Still,Shake,Turn
+```
+
+Windows PowerShell:
+
+```powershell
+python python_imu_segment_demo_student.py --port YOUR_PORT --classes Still,Shake,Turn
+```
+
+You may choose a different three-class task set, such as:
+
+- `Still,Shake,Turn`
+- `Tap,Circle,Flip`
+- `UpDown,LeftRight,Rotate`
+
+Workflow:
+
+1. Select a class.
+2. Press `c`, `Space`, `Enter`, or the **Capture 1 s** button.
+3. Perform the selected motion for the next second.
+4. Collect at least five examples per class if time allows.
+5. Press `t` or **Train**.
+6. Perform new examples and observe the live prediction.
+
+Student TODO: in `python_imu_segment_demo_student.py`, add summary statistics to the feature vector. Good first features are:
+
+- standard deviation of each channel;
+- min and max of each channel;
+- range of each channel;
+- RMS energy of each channel;
+- mean absolute first difference of each channel.
+
+Discussion questions:
+
+- Which three motions are easiest to separate?
+- Does the classifier fail when a different student performs the same motion?
+- Does adding summary features make predictions more stable?
+
+### 3:40-4:00 - Checkoff and Cleanup
+
+Each group should show the TA:
+
+1. live raw IMU data from the ESP32;
+2. the completed axis-response table;
+3. moving-average smoothing running with at least two window sizes;
+4. one trajectory capture and one explanation of why it drifts;
+5. the smoothed trajectory comparison;
+6. one trained 3-class live classifier.
+
+## Final Questions
+
+Answer these briefly in your group notes:
+
+1. What does the accelerometer measure when the board is completely still?
+2. How did you identify the physical x/y/z axes?
+3. What is the tradeoff when increasing the moving-average window size?
+4. Why does double integration of IMU acceleration drift so quickly?
+5. Why is the XY trajectory easier to interpret than the full 3D trajectory in this lab?
+6. Which features helped the classifier distinguish your motions?
+
+## Troubleshooting
+
+| Problem | Likely Cause | Fix |
 | --- | --- | --- |
-| `stationary` | Hold the sensor still. | 4 |
-| `walking` | Walk normally in a straight path or loop. | 4 |
-| `shake` | Shake the sensor with short rapid motions. | 4 |
-| `raise_lower` | Raise and lower the hand/phone repeatedly. | 4 |
-| `circle` | Move the sensor in a circular motion. | 4 |
-
-File naming:
-
-`group##_subject##_label##_trial##.csv`
-
-Examples:
-
-- `group03_subject01_walking_trial02.csv`
-- `group03_subject02_circle_trial04.csv`
-
-Rules:
-
-- Start each trial with 2 seconds of stillness if possible.
-- Avoid talking while recording if audio/video apps are open.
-- Keep distance from other groups so labels do not get mixed.
-- Save raw data before doing any filtering or trimming.
-
-### 1:25-1:45 - Data Quality Check
-
-Before modeling, check:
-
-- each file has a label;
-- each trial is about 10 seconds;
-- timestamps are increasing;
-- there are no long gaps in sampling;
-- acceleration and gyroscope columns are numeric;
-- no label has fewer than 3 usable trials.
-
-Make two plots:
-
-1. Raw `ax, ay, az` for one trial from each label.
-2. `acc_mag` and `gyro_mag` for one trial from each label.
-
-Discussion prompt: Which labels look easiest to separate by eye? Which labels overlap?
-
-## Part C: Sliding Windows and Features
-
-### 1:45-2:25 - Segment the Data
-
-Split each trial into sliding windows.
-
-Recommended settings:
-
-- window length: 2 seconds;
-- overlap: 50%;
-- minimum valid samples per window: 75% of expected samples.
-
-Each window inherits the label of its trial.
-
-Avoid data leakage:
-
-- Split train/test by `trial_id` or `subject_id`.
-- Do not randomly split individual windows if windows from the same trial can appear in both train and test.
-
-### 2:25-2:55 - Extract Features
-
-For each window, compute features from:
-
-- `ax, ay, az`;
-- `gx, gy, gz`;
-- `acc_mag`;
-- `gyro_mag`.
-
-Required features:
-
-- mean;
-- standard deviation;
-- minimum and maximum;
-- range: `max - min`;
-- median absolute deviation;
-- signal energy: `mean(x^2)`;
-- dominant frequency for `acc_mag`;
-- total variation: `sum(abs(diff(x)))`.
-
-Optional features:
-
-- correlation between axes;
-- zero-crossing rate after subtracting the mean;
-- spectral entropy;
-- ratio of low-frequency to high-frequency energy.
-
-Feature table format:
-
-`window_id, subject_id, trial_id, label, feature_1, feature_2, ...`
-
-Checkpoint: print the shape of your feature table and verify that each label has multiple windows.
-
-## Part D: Classification
-
-### 2:55-3:35 - Train and Evaluate
-
-Train at least two classifiers:
-
-- k-nearest neighbors;
-- logistic regression;
-- decision tree.
-
-Recommended evaluation:
-
-1. Split by trial: 70% of trials for training, 30% for testing.
-2. Standardize features using training-set statistics only.
-3. Train the models.
-4. Report accuracy and confusion matrix.
-5. Compare which labels are confused.
-
-Required plots:
-
-- confusion matrix;
-- bar chart of per-class accuracy;
-- 2D PCA or t-SNE plot of feature windows if time allows.
-
-Questions:
-
-- Which model performed best?
-- Which labels were hardest to classify?
-- Did raw axes or magnitude features seem more useful?
-- Would the model work if the phone were placed in a pocket instead of held in hand?
-
-### 3:35-3:50 - Cross-Person or New-Trial Test
-
-Choose one:
-
-**Option 1: New trial test**
-
-Record one new trial for each label and test your trained model.
-
-**Option 2: Cross-person test**
-
-Train on one subject and test on another subject.
-
-Record:
-
-- accuracy on normal train/test split;
-- accuracy on new-trial or cross-person split;
-- one reason performance changed.
-
-## Part E: Sensor Fusion Extension
-
-### 3:50-4:00 - Complementary Filter Demo
-
-If time remains, estimate pitch or roll.
-
-Accelerometer-only estimate:
-
-`roll_acc = atan2(ay, az)`
-
-Gyroscope integration:
-
-`roll_gyro[t] = roll_gyro[t-1] + gx[t] * dt`
-
-Complementary filter:
-
-`roll[t] = alpha * (roll[t-1] + gx[t] * dt) + (1 - alpha) * roll_acc[t]`
-
-Try `alpha = 0.98`.
-
-Discussion:
-
-- Why does the gyro-only angle drift?
-- Why is the accelerometer angle noisy during fast motion?
-- Why does the complementary filter improve the estimate?
-
-## Deliverables
-
-Submit one short report per group with:
-
-1. Sensor setup: device, placement, sampling rate, and orientation.
-2. Data collection table: labels, number of trials, duration.
-3. Raw signal plots for at least three labels.
-4. Magnitude plots for at least three labels.
-5. Feature table summary: number of windows and number of features.
-6. Classifier results: accuracy and confusion matrix.
-7. New-trial or cross-person test result.
-8. Answers to the discussion questions.
-
-## What to Conclude
-
-A strong conclusion should mention:
-
-- IMU activity recognition depends heavily on placement, orientation, and user behavior.
-- Magnitude features can reduce orientation sensitivity but do not solve every problem.
-- Sliding-window choices affect both accuracy and latency.
-- Random window splits can overestimate performance if windows from the same trial appear in train and test.
-- Sensor fusion is useful because accelerometers and gyroscopes have complementary failure modes.
-
-## Extension Ideas
-
-If your group finishes early:
-
-- build a live classifier that predicts the current label every 1-2 seconds;
-- compare 1-second, 2-second, and 4-second windows;
-- train on one placement and test on another;
-- remove gyroscope features and measure how accuracy changes;
-- design your own gesture vocabulary and collect a small dataset;
-- try a simple final-project idea using IMU plus another sensor.
+| No serial data | Wrong port, charge-only cable, or board not powered | Try another USB cable, check Device Manager or `/dev/cu.*`, reconnect the board. |
+| Port is busy | Another program has the serial port open | Close ESP-IDF monitor, Arduino serial monitor, PuTTY, or another Python script. |
+| Plot opens but stays flat | Board is not streaming expected text format | Ask the TA to confirm the firmware and baud rate. |
+| `ModuleNotFoundError` | Python packages not installed in the active environment | Activate the environment and run `python -m pip install -r requirements.txt`. |
+| Qt or PyQt error | GUI backend issue | Restart the terminal, confirm `PyQt6` installed, or ask a TA for the backup computer. |
+| Classifier predictions unstable | Too few examples or motions too similar | Collect more examples and choose more distinct motions. |
