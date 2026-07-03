@@ -9,6 +9,7 @@ nav_order: 3
 # Lab 3: WiFi, Wireshark, and CSI Collection **IoT**{: .label .label-iot }
 
 Date: July 8  
-TA: Shanmu
+Time: 1:00-5:00 PM  
+TA: Shanmu Wang
 
 Materials coming soon.

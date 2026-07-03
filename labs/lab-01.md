@@ -9,6 +9,7 @@ nav_order: 1
 # Lab 1: Python Environment and Notebook Setup **DS**{: .label .label-ds }
 
 Date: July 6  
+Time: 1:00-5:00 PM  
 TA: Jianhao Huang / Shanmu Wang  
 Goal: Prepare a working Python environment for all data science labs.
 
@@ -38,7 +39,7 @@ We recommend a local Python environment because later labs may use local dataset
 
 ## Part A: Organize Your Course Folder
 
-### 0:00-0:10 - Create a Course Workspace
+### 1:00-1:10 PM - Create a Course Workspace
 
 Create one folder for the course, for example:
 
@@ -64,7 +65,7 @@ Do not put course work only in `Downloads`. It is easy to lose files there.
 
 ## Part B: Install Python
 
-### 0:10-0:35 - Choose One Python Distribution
+### 1:10-1:35 PM - Choose One Python Distribution
 
 Use one of the following.
 
@@ -107,7 +108,7 @@ Use Python 3.10 or newer. Python 3.11 or 3.12 is recommended. If your Python ver
 
 ## Part C: Create the Course Environment
 
-### 0:35-1:00 - Create an Isolated Environment
+### 1:35-2:00 PM - Create an Isolated Environment
 
 An environment keeps this course's packages separate from other projects.
 
@@ -154,7 +155,7 @@ python -c "import numpy, pandas, matplotlib, sklearn; print('DS environment read
 
 ## Part D: Install and Configure an IDE
 
-### 1:00-1:25 - VS Code Setup
+### 2:00-2:25 PM - VS Code Setup
 
 If using VS Code:
 
@@ -170,7 +171,7 @@ If using VS Code:
    - search for `Python: Select Interpreter`;
    - choose `cosmos-ds` or `.venv`.
 
-### 1:25-1:35 - Register a Jupyter Kernel
+### 2:25-2:35 PM - Register a Jupyter Kernel
 
 Run:
 
@@ -186,7 +187,7 @@ Python (COSMOS DS)
 
 ## Part E: Run the Lab 1 Notebook Skeleton
 
-### 1:35-2:20 - Open the Provided Notebook
+### 2:35-3:20 PM - Open the Provided Notebook
 
 Download or copy the provided Lab 1 notebook skeleton into:
 
@@ -246,7 +247,7 @@ Checkpoint: show the TA your notebook with all cells executed and a visible plot
 
 ## Part F: Python Warm-Up
 
-### 2:20-3:15 - NumPy and Dictionaries
+### 3:20-4:15 PM - NumPy and Dictionaries
 
 Complete the warm-up cells in the skeleton notebook.
 
@@ -278,7 +279,7 @@ Required tasks:
 
 ## Part G: Debugging Practice
 
-### 3:15-3:40 - Common Errors
+### 4:15-4:40 PM - Common Errors
 
 Work through at least three intentionally broken cells in the skeleton notebook.
 
@@ -298,7 +299,7 @@ For each error, write:
 
 ## Part H: Reproducibility Check
 
-### 3:40-3:55 - Restart and Run All
+### 4:40-4:55 PM - Restart and Run All
 
 In the notebook menu:
 

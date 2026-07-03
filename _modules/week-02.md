@@ -3,7 +3,7 @@ title: Week 2 - Wireless Sensing and Model Evaluation
 ---
 
 July 13
-: **Lecture** Battery-Free IoT: RFID, Backscatter
+: **Lecture** Battery-free IoT data collection: RFID and backscatter
   : Instructor: Omid Abari
 : **IoT**{: .label .label-iot } [Lab 6: RFID Reader]({{ site.baseurl }}/labs/lab-06/)
   : TA: Shanmu Wang. Form final project groups.
@@ -15,7 +15,7 @@ July 14
   : TA: Jianhao Huang / Shanmu Wang.
 
 July 15
-: **Lecture** IoT Localization: AoA, ToF, GPS
+: **Lecture** Location-aware IoT: AoA, ToF, GPS
   : Instructor: Omid Abari
 : Distinguished Faculty Lecture Series
   : 3:00-5:00 PM. TA: Jianhao Huang / Shanmu Wang.
@@ -27,7 +27,7 @@ July 16
   : TA: Jianhao Huang.
 
 July 17
-: **Lecture** IoT Sensing: UWB
+: **Lecture** High-resolution spatial data sensing: UWB
   : Instructor: Omid Abari
 : **IoT**{: .label .label-iot } [Lab 9: UWB Ranging and CIR Sensing]({{ site.baseurl }}/labs/lab-09/)
   : TA: Shanmu Wang.

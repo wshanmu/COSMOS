@@ -9,10 +9,10 @@ nav_order: 11
 # Lab 11: mmWave FMCW Sensing **IoT**{: .label .label-iot }
 
 Date: July 21  
-TA: Shanmu  
+Time: 1:00-5:00 PM  
+TA: Shanmu Wang  
 Format: Groups of 4  
 Hardware: One IWRL6432FSPEVM Evaluation Module per group  
-Total time: About 4 hours
 
 ## Goals
 
@@ -133,7 +133,7 @@ Apple's [Terminal User Guide](https://support.apple.com/guide/terminal/welcome/m
 
 ## Four-Hour Plan
 
-### 0:00-0:10 - Safety, Roles, and Data Path
+### 1:00-1:10 PM - Safety, Roles, and Data Path
 
 Start with the target data path:
 
@@ -141,7 +141,7 @@ Start with the target data path:
 
 Check that each group has the EVM, breakout board, USB-to-UART adapter, wires, and a PC with the TI tools installed.
 
-### 0:10-0:35 - Wire the EVM
+### 1:10-1:35 PM - Wire the EVM
 
 Use the official EVM guide's Section 2.3 setup:
 
@@ -156,7 +156,7 @@ Use the official EVM guide's Section 2.3 setup:
 
 Checkpoint: the group can identify the power, ground, RX/TX, and SOP connections before plugging into the PC.
 
-### 0:35-1:10 - Flash or Verify the Demo Firmware
+### 1:35-2:10 PM - Flash or Verify the Demo Firmware
 
 Follow the official guide's flashing flow:
 
@@ -174,7 +174,7 @@ Follow the official guide's flashing flow:
 
 Deliverable: one screenshot or note showing successful serial connection and version output.
 
-### 1:10-1:50 - Get First Point-Cloud Data
+### 2:10-2:50 PM - Get First Point-Cloud Data
 
 Use the MMWAVE-L-SDK visualizer:
 
@@ -188,7 +188,7 @@ Use the MMWAVE-L-SDK visualizer:
 
 Deliverable: one range profile screenshot and one point-cloud screenshot.
 
-### 1:50-2:25 - FMCW Range Estimation
+### 2:50-3:25 PM - FMCW Range Estimation
 
 Mini-lesson:
 
@@ -206,7 +206,7 @@ Activity:
 
 Checkoff question: Why does a farther object produce a different beat frequency?
 
-### 2:25-3:00 - Doppler and Velocity
+### 3:25-4:00 PM - Doppler and Velocity
 
 Mini-lesson:
 
@@ -222,7 +222,7 @@ Activity:
 
 Checkoff question: Why is a stationary chair easier to remove than a moving hand?
 
-### 3:00-3:35 - Point Clouds and Detection
+### 4:00-4:35 PM - Point Clouds and Detection
 
 Mini-lesson:
 
@@ -238,7 +238,7 @@ Activity:
 
 Checkoff question: What information is lost when raw radar samples are reduced to a point cloud?
 
-### 3:35-3:55 - Digital Beamforming and Angle
+### 4:35-4:55 PM - Digital Beamforming and Angle
 
 Mini-lesson:
 
@@ -254,7 +254,7 @@ Activity:
 
 Checkoff question: Why do more antenna channels usually improve angle estimation?
 
-### 3:55-4:00 - Wrap-Up
+### 4:55-5:00 PM - Wrap-Up
 
 Each group submits:
 

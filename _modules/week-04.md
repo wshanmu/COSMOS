@@ -11,7 +11,7 @@ July 27
   : 3:00-5:00 PM.
 
 July 28
-: **Lecture** Open topics
+: **Lecture** Data-driven IoT: smart city, agriculture, health, etc.
   : Instructor: Omid Abari
 : **Project**{: .label .label-project } Project work
   : TA: Jianhao Huang / Shanmu Wang.
@@ -23,7 +23,7 @@ July 29
   : TA: Jianhao Huang / Shanmu Wang.
 
 July 30
-: **Lecture** Open topics
+: **Lecture** Open topics: ubiquitous IoT data collection and privacy, etc.
   : Instructor: Omid Abari
 : **Project**{: .label .label-project } Project work
   : TA: Jianhao Huang / Shanmu Wang.

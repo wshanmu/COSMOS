@@ -1,5 +1,5 @@
 ---
-title: Week 3 - Classification, mmWave, and Data-Driven IoT
+title: Week 3 - Classification, mmWave, and Acoustic IoT
 ---
 
 July 20
@@ -9,7 +9,7 @@ July 20
   : TA: Jianhao Huang.
 
 July 21
-: **Lecture** IoT Sensing: FMCW
+: **Lecture** High-resolution spatial data sensing: FMCW
   : Instructor: Omid Abari
 : **IoT**{: .label .label-iot } [Lab 11: mmWave FMCW Sensing]({{ site.baseurl }}/labs/lab-11/)
   : TA: Shanmu Wang.
@@ -21,7 +21,7 @@ July 22
   : 3:00-5:00 PM. TA: Jianhao Huang / Shanmu Wang.
 
 July 23
-: **Lecture** Data-Driven IoT: Smart City, Agriculture, Health, etc.
+: **Lecture** Acoustic IoT: underwater, noise cancellation
   : Instructor: Omid Abari
 : **DS**{: .label .label-ds } [Lab 12: Classification Big Lab]({{ site.baseurl }}/labs/lab-12/)
   : KNN, logistic regression, SVM, and decision trees. TA: Jianhao Huang.

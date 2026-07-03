@@ -8,10 +8,10 @@ nav_order: 5
 
 # Lab 5: IMU Activity and Gesture Recognition **IoT**{: .label .label-iot }
 
-Date: July 10  
+Date: July 9  
+Time: 1:00-5:00 PM  
 TA: Shanmu Wang  
 Hardware: ESP32 board with BMI270 IMU  
-Total time: About 4 hours
 
 ## Goals
 
@@ -153,7 +153,7 @@ Use your actual port in the commands below. Examples:
 
 ## Four-Hour Plan
 
-### 0:00-0:20 - Demo and IMU Concepts
+### 1:00-1:20 PM - Demo and IMU Concepts
 
 The TA will first show the live visualization and a working classifier demo.
 
@@ -168,7 +168,7 @@ Useful checks:
 - If one axis points upward, that accelerometer channel should be close to `+1 g` or `-1 g`.
 - If you rotate around one board axis, the matching gyroscope channel should have the largest response.
 
-### 0:20-0:45 - Visualize Raw 6-Axis Data
+### 1:20-1:45 PM - Visualize Raw 6-Axis Data
 
 Run the live plot:
 
@@ -196,7 +196,7 @@ Deliverable for this step: fill in a table like this.
 | Rotation around y |  |  |
 | Rotation around z |  |  |
 
-### 0:45-1:25 - Implement Moving-Average Smoothing
+### 1:45-2:25 PM - Implement Moving-Average Smoothing
 
 Raw IMU signals are noisy because of MEMS sensor noise, hand tremor, quantization, board vibration, and small timing variation. A moving average reduces high-frequency noise by replacing each new sample with the average of the most recent `N` samples.
 
@@ -226,7 +226,7 @@ Checkpoint questions:
 - Which window size creates the most delay?
 - Why is too much smoothing bad for fast gestures?
 
-### 1:25-2:15 - Capture a Short Trajectory
+### 2:25-3:15 PM - Capture a Short Trajectory
 
 In principle, a trajectory can be estimated from acceleration:
 
@@ -261,7 +261,7 @@ What the script is doing:
 
 Thinking question: why does this lab visualize only the 2D XY trajectory instead of a full 3D path?
 
-### 2:15-2:50 - Add Smoothing Before Trajectory Estimation
+### 3:15-3:50 PM - Add Smoothing Before Trajectory Estimation
 
 Copy the moving-average idea from `plot_imu_smoothed_TODO.py` into `capture_trajectory_smoothed_TODO.py`.
 
@@ -281,7 +281,7 @@ Deliverable for this step:
 
 Expected observation: smoothing can make the path less jittery, but it cannot remove constant bias, imperfect gravity subtraction, orientation error, or integration drift. A very large window can also lag behind the real motion.
 
-### 2:50-3:40 - Train a Simple IMU Motion Classifier
+### 3:50-4:40 PM - Train a Simple IMU Motion Classifier
 
 Open the classifier folder:
 
@@ -333,7 +333,7 @@ Discussion questions:
 - Does the classifier fail when a different student performs the same motion?
 - Does adding summary features make predictions more stable?
 
-### 3:40-4:00 - Checkoff and Cleanup
+### 4:40-5:00 PM - Checkoff and Cleanup
 
 Each group should show the TA:
 

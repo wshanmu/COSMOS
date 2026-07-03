@@ -8,8 +8,9 @@ nav_order: 4
 
 # Lab 4: Linear Regression and KNN Regression **DS**{: .label .label-ds }
 
-Date: July 9  
+Date: July 10  
+Time: 1:00-5:00 PM  
 Dataset: Appliance energy  
-TA: Jianhao
+TA: Jianhao Huang
 
 Materials coming soon.

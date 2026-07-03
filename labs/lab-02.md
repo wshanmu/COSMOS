@@ -9,7 +9,8 @@ nav_order: 2
 # Lab 2: Data Analysis and Visualization **DS**{: .label .label-ds }
 
 Date: July 7  
+Time: 1:00-5:00 PM  
 Dataset: Heart data  
-TA: Jianhao
+TA: Jianhao Huang
 
 Materials coming soon.

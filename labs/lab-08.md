@@ -9,6 +9,7 @@ nav_order: 8
 # Lab 8: Train/Validation/Test Split and Polynomial Regression **DS**{: .label .label-ds }
 
 Date: July 16  
-TA: Jianhao
+Time: 1:00-5:00 PM  
+TA: Jianhao Huang
 
 Materials coming soon.

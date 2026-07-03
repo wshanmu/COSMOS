@@ -9,9 +9,9 @@ nav_order: 9
 # Lab 9: UWB Ranging and CIR Sensing **IoT**{: .label .label-iot }
 
 Date: July 17  
+Time: 1:00-5:00 PM  
 TA: Shanmu Wang  
 Hardware: Qorvo DWM3001CDK boards  
-Total time: About 4 hours
 
 ## Goals
 
@@ -137,7 +137,7 @@ Further reading:
 
 ## Part A: DS-TWR Ranging
 
-### 0:00-0:15 - UWB and DS-TWR Concept
+### 1:00-1:15 PM - UWB and DS-TWR Concept
 
 UWB ranging estimates distance from propagation time:
 
@@ -173,7 +173,7 @@ Key terms:
 - **Bias:** average signed error, `measured - true`.
 - **Stability:** how much the range estimate varies over time at a fixed distance.
 
-### 0:15-0:45 - Download SDK and Flash Prebuilt Firmware
+### 1:15-1:45 PM - Download SDK and Flash Prebuilt Firmware
 
 1. Go to the [DWM3001CDK product page](https://www.qorvo.com/products/p/DWM3001CDK).
 2. Open the **Software** section and download **DW3xxx & QM3xxx SDK**.
@@ -194,7 +194,7 @@ Record:
 
 Checkpoint: show the TA one live ranging output.
 
-### 0:45-1:30 - LoS Ranging Measurements
+### 1:45-2:30 PM - LoS Ranging Measurements
 
 Keep the boards at the same height, with antennas facing the same way when possible. Avoid touching the boards during a recording.
 
@@ -220,7 +220,7 @@ Suggested CSV columns:
 
 `timestamp_s, true_distance_m, measured_range_m, condition, notes`
 
-### 1:30-2:10 - NLoS Ranging Measurements
+### 2:30-3:10 PM - NLoS Ranging Measurements
 
 Repeat at 1 m and 2 m with controlled blockers:
 
@@ -235,7 +235,7 @@ Keep the board positions fixed when switching from LoS to NLoS. Only add the blo
 
 Checkpoint question: Does NLoS mostly add noise, a positive bias, dropouts, or all three?
 
-### 2:10-2:50 - Ranging Analysis
+### 3:10-3:50 PM - Ranging Analysis
 
 For each trial, compute:
 
@@ -299,7 +299,7 @@ Further reading: [UWB ranging overview](https://en.wikipedia.org/wiki/UWB_rangin
 
 This part uses TA-provided firmware that streams channel impulse response (CIR) data. If the firmware is not ready, complete Part A thoroughly and treat this section as a design discussion.
 
-### 2:50-3:10 - Flash CIR Streaming Firmware
+### 3:50-4:10 PM - Flash CIR Streaming Firmware
 
 1. Save your DS-TWR logs before reflashing.
 2. Flash the TA-provided CIR firmware to the board pair.
@@ -314,7 +314,7 @@ If only magnitude is available, use:
 
 `timestamp_s, frame_id, sample_index, cir_mag, range_m`
 
-### 3:10-3:30 - Static CIR Profiles
+### 4:10-4:30 PM - Static CIR Profiles
 
 Collect four static scenes for 30 seconds each:
 
@@ -337,7 +337,7 @@ Discussion prompts:
 - Does the strongest peak always correspond to the first arriving path?
 - Which scene looks most different from baseline?
 
-### 3:30-3:50 - Waterfall Plot
+### 4:30-4:50 PM - Waterfall Plot
 
 Create a CIR waterfall plot:
 
@@ -354,7 +354,7 @@ Recommended processing:
 
 Checkpoint question: What does movement look like in the waterfall plot?
 
-### 3:50-4:00 - Mini Sensing Dataset
+### 4:50-5:00 PM - Mini Sensing Dataset
 
 Collect a small dataset for one application: **hand movement classification**.
 
