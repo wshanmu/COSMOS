@@ -23,11 +23,11 @@ July 8
 July 9
 : **Lecture** Data-to-cloud data connectivity: 5G, LoRa
   : Instructor: Omid Abari
-: **IoT**{: .label .label-iot } [Lab 5: IMU Activity and Gesture Recognition]({{ site.baseurl }}/labs/lab-05/)
+: **IoT**{: .label .label-iot } [Lab 4: IMU Activity and Gesture Recognition]({{ site.baseurl }}/labs/lab-04/)
   : TA: Shanmu Wang.
 
 July 10
 : **Lecture** KNN and linear regression
   : Instructor: Baharan Mirzasoleiman
-: **DS**{: .label .label-ds } [Lab 4: Linear Regression and KNN Regression]({{ site.baseurl }}/labs/lab-04/)
+: **DS**{: .label .label-ds } [Lab 5: Linear Regression and KNN Regression]({{ site.baseurl }}/labs/lab-05/)
   : Appliance energy dataset. TA: Jianhao Huang.
