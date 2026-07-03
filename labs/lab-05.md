@@ -27,13 +27,24 @@ By the end of this lab, each group should be able to:
 
 ## Lab Code
 
-Use the student code folder distributed with the course materials:
+Use the public IMU lab repository as the source of truth:
 
-```text
-notebooks/student/Lab_05_IMU_Activity_and_Gesture_Recognition/IMU_lab/
+[https://github.com/wshanmu/IMU_lab](https://github.com/wshanmu/IMU_lab)
+
+Clone it once:
+
+```bash
+git clone https://github.com/wshanmu/IMU_lab.git
+cd IMU_lab
 ```
 
-On the course website, open the [Lab 5 IMU code page]({{ site.baseurl }}/notebooks/student/Lab_05_IMU_Activity_and_Gesture_Recognition/IMU_lab/).
+Before lab, update to the latest version:
+
+```bash
+git pull
+```
+
+If `git pull` reports local changes, ask a TA before running reset, checkout, or other commands that overwrite files.
 
 The main files used in this lab are:
 
@@ -98,7 +109,7 @@ Official references:
 Open a terminal in the lab code folder:
 
 ```bash
-cd notebooks/student/Lab_05_IMU_Activity_and_Gesture_Recognition/IMU_lab/tools
+cd IMU_lab/tools
 ```
 
 Create a Python environment if you have not already done so.
