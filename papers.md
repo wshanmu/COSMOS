@@ -15,7 +15,12 @@ nav_order: 5
 | **IoT**{: .label .label-iot } | [FarmBeats: An IoT Platform for Data-Driven Agriculture](https://www.usenix.org/conference/nsdi17/technical-sessions/presentation/vasisht) | Sensors, connectivity, drones, and ML |
 | **DS**{: .label .label-ds } | [Communication-Efficient Learning of Deep Networks from Decentralized Data](https://proceedings.mlr.press/v54/mcmahan17a.html) | FedAvg |
 | **IoT**{: .label .label-iot } | [Whole-Home Gesture Recognition Using Wireless Signals](https://wisee.cs.washington.edu/wisee_paper.pdf) | WiFi sensing |
-| **DS**{: .label .label-ds } | [Deep Learning](https://www.nature.com/articles/nature14539) | LeCun, Bengio, and Hinton |
+| **ML**{: .label .label-ds } | [Deep Learning](https://www.nature.com/articles/nature14539) | LeCun, Bengio, and Hinton |
+| **ML**{: .label .label-ds } | [Adam: A Method for Stochastic Optimization](https://arxiv.org/abs/1412.6980) | Adaptive optimizer for deep learning |
+| **ML**{: .label .label-ds } | [Attention Is All You Need](https://arxiv.org/abs/1706.03762) | Transformer architecture from Google |
+| **DS**{: .label .label-ds } | [Scaling Laws for Neural Language Models](https://arxiv.org/abs/2001.08361) | OpenAI scaling laws |
+| **DS**{: .label .label-ds } | [Training Compute-Optimal Large Language Models](https://arxiv.org/abs/2203.15556) | DeepMind Chinchilla scaling law |
+| **ML**{: .label .label-ds } | [Chain-of-Thought Prompting Elicits Reasoning in Large Language Models](https://arxiv.org/abs/2201.11903) | Step-by-step reasoning with LLMs |
 | **IoT**{: .label .label-iot } | [UTrack3D: 3D Tracking Using Ultra-wideband (UWB) Radios](https://dl.acm.org/doi/pdf/10.1145/3643832.3661881) | UWB tracking |
 | **IoT**{: .label .label-iot } | [GazeTrak: Exploring Acoustic-based Eye Tracking on a Glass Frame](https://dl.acm.org/doi/10.1145/3636534.3649376) | Acoustic sensing for eye tracking |
 | **IoT**{: .label .label-iot } | [Food and Liquid Sensing in Practical Environments using RFIDs](https://www.usenix.org/conference/nsdi20/presentation/ha) | RFID sensing |
