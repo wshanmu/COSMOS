@@ -27,16 +27,15 @@ By the end of this lab, you should have one working setup on your laptop or lab 
 
 ## Recommended Setup
 
-Use this setup if possible:
+Use one of these setups:
 
-| Tool | Purpose in this course |
+| Option | Recommended For | Notes |
 | --- | --- | --- |
-| **Conda** | Creates an isolated Python environment so package versions do not conflict with other projects. |
-| **VS Code** | Main code editor for notebooks, Python scripts, terminals, and later embedded/IoT code. |
-| **Git** | Downloads and updates course code repositories, including later IoT lab code. |
-| **Jupyter** | Runs `.ipynb` notebooks cell by cell for data science labs. |
+| VS Code + Jupyter extension | Most students | Good editor, file browser, terminal, and notebook support in one app. |
+| JupyterLab in browser | Students who prefer browser notebooks | Simple and close to classic notebook workflows. |
+| Google Colab | Backup only | Useful if local installation fails, but local files and packages are less convenient. |
 
-Google Colab is a backup option if local installation fails, but we recommend a local setup because later labs use local datasets, saved figures, serial ports, and custom helper files.
+We recommend a local Python environment because later labs may use local datasets, saved figures, and custom helper files.
 
 ## Part A: Organize Your Course Folder
 
@@ -64,117 +63,88 @@ COSMOS-Cluster10/
 
 Do not put course work only in `Downloads`. It is easy to lose files there.
 
-## Part B: Install the Required Tools
+## Part B: Install Python
 
-### 1:10-1:55 PM - Install Conda, VS Code, and Git
+### 1:10-1:35 PM - Choose One Python Distribution
 
-Install these three tools first.
+Use one of the following.
 
-### 1. Install Conda
+### Option 1: Miniforge or Miniconda
 
-Conda is both a Python package manager and an environment manager. We will use it to create a course environment named `cosmos-ds`.
+This is recommended if you already know conda or want a clean environment manager.
 
-Recommended installer:
-
-- Beginners: install [Anaconda Distribution](https://www.anaconda.com/download). It includes conda, Python, Navigator, and many common data science packages.
-- Smaller install: install [Miniconda](https://www.anaconda.com/docs/getting-started/miniconda/install). It includes conda and Python, then you install only the packages you need.
-
-After installing, open the correct terminal:
-
-- Windows: open **Anaconda Prompt** from the Start menu.
-- macOS/Linux: open **Terminal**. If `conda` is not found, close and reopen Terminal once.
-
-Check that conda works:
+After installing, open a terminal and check:
 
 ```bash
-conda --version
 python --version
+conda --version
 ```
 
-If `python` does not work on macOS/Linux, try:
+If `python` does not work on macOS, try:
 
 ```bash
 python3 --version
 ```
 
-### 2. Install Visual Studio Code
+### Option 2: Python.org Installer
 
-VS Code is the editor we will use to open folders, edit Python files, run notebooks, and use an integrated terminal.
-
-Install [Visual Studio Code](https://code.visualstudio.com/).
-
-Important macOS step: after installing VS Code, open VS Code and run:
-
-1. Press `Command+Shift+P`.
-2. Search for `Shell Command: Install 'code' command in PATH`.
-3. Press `Enter`.
-
-This lets you open a folder from Terminal with:
+Install Python from the official Python installer. Then check:
 
 ```bash
-code .
-```
-
-### 3. Install Git
-
-Git lets you download course code, keep it updated, and work with public repositories such as the IMU lab repository.
-
-Install [Git](https://git-scm.com/downloads).
-
-Platform notes:
-
-- Windows: install Git for Windows. The default installer choices are fine. It also installs **Git Bash**, which is a useful terminal.
-- macOS: installing Git may trigger an Apple Command Line Tools prompt. Accept it if prompted.
-- Linux: install Git with your package manager, for example `sudo apt install git` on Ubuntu/Debian.
-
-Check that Git works:
-
-```bash
-git --version
-```
-
-### Tool Installation Checkpoint
-
-Show a TA that these commands work in a terminal:
-
-```bash
-conda --version
 python --version
-git --version
+python -m pip --version
 ```
 
-Use Python 3.10 or newer. Python 3.11 or 3.12 is recommended.
+On macOS, you may need:
+
+```bash
+python3 --version
+python3 -m pip --version
+```
+
+### Required Python Version
+
+Use Python 3.10 or newer. Python 3.11 or 3.12 is recommended. If your Python version is older than 3.10, ask a TA before continuing.
 
 ## Part C: Create the Course Environment
 
-### 1:55-2:20 PM - Create an Isolated Environment
+### 1:35-2:00 PM - Create an Isolated Environment
 
 An environment keeps this course's packages separate from other projects.
 
-Create and activate the environment:
+### If Using Conda
 
 ```bash
 conda create -n cosmos-ds python=3.11
 conda activate cosmos-ds
 ```
 
-Install the data science and notebook packages:
+Install packages:
 
 ```bash
+python -m pip install numpy pandas matplotlib seaborn scipy scikit-learn jupyterlab notebook ipykernel
+```
+
+### If Using venv
+
+Create the environment inside your course folder.
+
+macOS/Linux:
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
 python -m pip install --upgrade pip
 python -m pip install numpy pandas matplotlib seaborn scipy scikit-learn jupyterlab notebook ipykernel
 ```
 
-Register the environment as a Jupyter kernel:
+Windows PowerShell:
 
-```bash
-python -m ipykernel install --user --name cosmos-ds --display-name "Python (COSMOS DS)"
-```
-
-Every time you start work for this course, activate the environment first:
-
-```bash
-conda activate cosmos-ds
+```powershell
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m pip install --upgrade pip
+python -m pip install numpy pandas matplotlib seaborn scipy scikit-learn jupyterlab notebook ipykernel
 ```
 
 Checkpoint:
@@ -183,80 +153,41 @@ Checkpoint:
 python -c "import numpy, pandas, matplotlib, sklearn; print('DS environment ready')"
 ```
 
-## Part D: Configure VS Code for Python and Jupyter
+## Part D: Install and Configure an IDE
 
-### 2:20-2:50 PM - Install Extensions and Select the Environment
+### 2:00-2:25 PM - VS Code Setup
 
-Open VS Code and install the required extensions:
+If using VS Code:
 
-1. Open the Extensions view:
-   - macOS: `Command+Shift+X`
-   - Windows/Linux: `Ctrl+Shift+X`
-2. Search for **Python**.
-3. Install **Python** by Microsoft.
-4. Search for **Jupyter**.
-5. Install **Jupyter** by Microsoft.
-6. If VS Code asks to reload, reload the window.
+1. Install VS Code.
+2. Install these extensions:
+   - Python
+   - Jupyter
+3. Open your `COSMOS-Cluster10` folder in VS Code.
+4. Open a terminal inside VS Code.
+5. Activate your environment.
+6. Select the Python interpreter:
+   - press `Command+Shift+P` on macOS or `Ctrl+Shift+P` on Windows;
+   - search for `Python: Select Interpreter`;
+   - choose `cosmos-ds` or `.venv`.
 
-Open the course folder:
+### 2:25-2:35 PM - Register a Jupyter Kernel
 
-1. In VS Code, choose **File > Open Folder**.
-2. Select your `COSMOS-Cluster10` folder.
-3. Choose **Terminal > New Terminal**.
-4. In the VS Code terminal, run:
-
-```bash
-conda activate cosmos-ds
-```
-
-Select the Python interpreter:
-
-1. Open the Command Palette:
-   - macOS: `Command+Shift+P`
-   - Windows/Linux: `Ctrl+Shift+P`
-2. Search for `Python: Select Interpreter`.
-3. Choose the interpreter that says `cosmos-ds`.
-4. If there are multiple choices, choose the one whose path includes `envs/cosmos-ds`.
-
-Open a notebook and select the kernel:
-
-1. Open the Lab 1 `.ipynb` file.
-2. Click **Select Kernel** in the upper-right corner of the notebook.
-3. Select **Python (COSMOS DS)**.
-4. Run the first cell.
-
-If the notebook cannot find the kernel, restart VS Code and run this again in the VS Code terminal:
+Run:
 
 ```bash
-conda activate cosmos-ds
 python -m ipykernel install --user --name cosmos-ds --display-name "Python (COSMOS DS)"
 ```
 
-### Useful VS Code Shortcuts
+When opening a notebook, select the kernel named:
 
-You do not need to memorize all of these today, but using them will make labs much faster.
-
-| Action | macOS | Windows/Linux |
-| --- | --- | --- |
-| Command Palette | `Command+Shift+P` | `Ctrl+Shift+P` |
-| Quick open file | `Command+P` | `Ctrl+P` |
-| Open/close terminal | `` Control+` `` | `` Ctrl+` `` |
-| Find in current file | `Command+F` | `Ctrl+F` |
-| Save file | `Command+S` | `Ctrl+S` |
-| Move cursor by word | `Option+Left/Right` | `Ctrl+Left/Right` |
-| Select by word | `Option+Shift+Left/Right` | `Ctrl+Shift+Left/Right` |
-| Move to line start/end | `Command+Left/Right` | `Home` / `End` |
-| Comment/uncomment line | `Command+/` | `Ctrl+/` |
-| Move current line | `Option+Up/Down` | `Alt+Up/Down` |
-| Run selected notebook cell | `Control+Enter` | `Ctrl+Enter` |
-| Run cell and move to next | `Shift+Enter` | `Shift+Enter` |
-| Run cell and insert below | `Option+Enter` | `Alt+Enter` |
-
-Notebook tip: if a keyboard shortcut seems to edit text instead of controlling the notebook, click outside the cell text area or press `Esc` first.
+```text
+Python (COSMOS DS)
+```
 
 ## Part E: Run the Lab 1 Notebook Skeleton
 
-### 2:50-3:20 PM - Open the Provided Notebook
+### 2:35-3:20 PM - Open the Provided Notebook
 
 Download or copy the provided Lab 1 notebook skeleton into:
 
@@ -379,6 +310,122 @@ In the notebook menu:
 
 This is important. A notebook is not complete until it can run from a clean kernel.
 
+## Optional Tutorial: Better Terminal Setup for Linux/macOS
+
+This tutorial is optional and is not required for Lab 1 submission. It is useful if you want a nicer terminal for the rest of the course, especially when you are navigating folders, activating Python environments, and using Git.
+
+Goal: install [Oh My Zsh](https://ohmyz.sh/), add the [Powerlevel10k](https://github.com/romkatv/powerlevel10k) prompt theme, and enable command syntax highlighting plus autosuggestions.
+
+### Step 0 - Check Zsh and Git
+
+Open Terminal and run:
+
+```bash
+zsh --version
+git --version
+```
+
+If `zsh` is missing on Linux, install it with your package manager. For example, on Ubuntu/Debian:
+
+```bash
+sudo apt update
+sudo apt install zsh git curl
+```
+
+On macOS, Zsh is usually already installed.
+
+Optional: make Zsh your default shell.
+
+```bash
+chsh -s "$(which zsh)"
+```
+
+Close and reopen Terminal after changing your default shell.
+
+### Step 1 - Install Oh My Zsh
+
+Run the official installer:
+
+```bash
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+```
+
+If the installer asks whether to switch to Zsh, choose yes.
+
+### Step 2 - Install Powerlevel10k
+
+Clone the theme into the Oh My Zsh custom themes folder:
+
+```bash
+git clone --depth=1 https://github.com/romkatv/powerlevel10k.git "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k"
+```
+
+Open `~/.zshrc` in a text editor and change the `ZSH_THEME` line to:
+
+```bash
+ZSH_THEME="powerlevel10k/powerlevel10k"
+```
+
+Restart Zsh:
+
+```bash
+exec zsh
+```
+
+If the Powerlevel10k configuration wizard does not start automatically, run:
+
+```bash
+p10k configure
+```
+
+For best icons and symbols, install the font recommended by the Powerlevel10k wizard, then select it in your terminal profile.
+
+### Step 3 - Add Highlighting and Autosuggestions
+
+Install the two plugins:
+
+```bash
+git clone https://github.com/zsh-users/zsh-autosuggestions "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-autosuggestions"
+git clone https://github.com/zsh-users/zsh-syntax-highlighting.git "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting"
+```
+
+Open `~/.zshrc`, find the `plugins=(...)` line, and include these plugins. Keep `zsh-syntax-highlighting` last.
+
+```bash
+plugins=(git zsh-autosuggestions zsh-syntax-highlighting)
+```
+
+Restart Zsh:
+
+```bash
+exec zsh
+```
+
+Quick checks:
+
+- type part of an old command and press the right arrow key to accept the autosuggestion;
+- type a valid command such as `python --version` and notice the command highlighting;
+- type a command that does not exist and notice that the highlighting changes.
+
+### Troubleshooting Optional Terminal Setup
+
+If your prompt shows boxes or question marks, install the recommended Powerlevel10k font and select it in Terminal, iTerm2, VS Code Terminal, or your Linux terminal app.
+
+If Zsh says a plugin is missing, check that the plugin folders exist:
+
+```bash
+ls "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins"
+```
+
+If the terminal feels broken, you can temporarily disable this setup by opening `~/.zshrc`, setting:
+
+```bash
+ZSH_THEME="robbyrussell"
+plugins=(git)
+```
+
+Then restart Zsh with `exec zsh`.
+
 ## Submit
 
 Submit:
@@ -458,20 +505,3 @@ A strong Lab 1 setup means:
 - your files are organized for the rest of the course.
 
 If your environment still does not work by the end of lab, ask a TA to help you switch to the backup option before the next data science lab.
-
-## Optional Setup for Later IoT Labs
-
-If you finish early, install the **ESP-IDF** extension in VS Code. We will use it later for ESP32-based WiFi and IMU labs.
-
-1. Open the Extensions view:
-   - macOS: `Command+Shift+X`
-   - Windows/Linux: `Ctrl+Shift+X`
-2. Search for **ESP-IDF**.
-3. Install the **Espressif IDF** extension.
-4. Open the Command Palette:
-   - macOS: `Command+Shift+P`
-   - Windows/Linux: `Ctrl+Shift+P`
-5. Search for `ESP-IDF: Open ESP-IDF Installation Manager`.
-6. Start the installer if you have time. If it takes too long, stop here and finish it during the WiFi or IMU lab with a TA.
-
-Official reference: [ESP-IDF VS Code extension installation guide](https://docs.espressif.com/projects/vscode-esp-idf-extension/en/latest/installation.html).
