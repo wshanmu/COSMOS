@@ -407,6 +407,11 @@ Quick checks:
 - type a valid command such as `python --version` and notice the command highlighting;
 - type a command that does not exist and notice that the highlighting changes.
 
+## Optional Tutorial: Git by Example
+
+This tutorial is optional and is not required for Lab 1 submission. It is useful if you want more practice with Git, especially before working on group code, notebooks, or final project materials.
+
+Use [Git by example: Interactive guide](https://antonz.org/git-by-example/) as a hands-on reference. The guide lets you read short explanations, run example commands, and experiment safely in an interactive environment.
 
 ## Submit
 
