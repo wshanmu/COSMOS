@@ -407,24 +407,6 @@ Quick checks:
 - type a valid command such as `python --version` and notice the command highlighting;
 - type a command that does not exist and notice that the highlighting changes.
 
-### Troubleshooting Optional Terminal Setup
-
-If your prompt shows boxes or question marks, install the recommended Powerlevel10k font and select it in Terminal, iTerm2, VS Code Terminal, or your Linux terminal app.
-
-If Zsh says a plugin is missing, check that the plugin folders exist:
-
-```bash
-ls "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins"
-```
-
-If the terminal feels broken, you can temporarily disable this setup by opening `~/.zshrc`, setting:
-
-```bash
-ZSH_THEME="robbyrussell"
-plugins=(git)
-```
-
-Then restart Zsh with `exec zsh`.
 
 ## Submit
 
