@@ -153,13 +153,6 @@ When flashing a board, open that board's firmware folder in VS Code and select t
 | `injector/` | ESP32-C3-Mini injector | `esp32c3` |
 | `sniffer/` | ESP32-CAM sniffer | `esp32` |
 
-Then run:
-
-1. `ESP-IDF: Select Port to Use`.
-2. `ESP-IDF: Build your Project`.
-3. `ESP-IDF: Flash your Project`.
-4. `ESP-IDF: Monitor your Device`.
-
 Do not erase flash or overwrite code outside the lab repository unless a TA asks you to.
 
 Official references:
@@ -447,6 +440,7 @@ Some subcarriers may look zero, invalid, or almost static. This is expected. The
 
 Useful reading:
 
+- [Understanding CSI](https://tns.thss.tsinghua.edu.cn/wst/docs/pre)
 - [Espressif Wi-Fi Channel State Information](https://docs.espressif.com/projects/esp-idf/en/stable/esp32/api-guides/wifi-driver/wifi-vendor-features.html#wi-fi-channel-state-information)
 - [Espressif Wi-Fi CSI configuration steps](https://docs.espressif.com/projects/esp-idf/en/stable/esp32/api-guides/wifi-driver/wifi-vendor-features.html#wi-fi-channel-state-information-configure)
 
