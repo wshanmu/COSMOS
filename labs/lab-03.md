@@ -94,13 +94,13 @@ After groups are formed, the TA will distribute one kit per group: one `softAP` 
 
 ## Before You Start
 
-Each group should have:
+Each group should have one kit with:
 
-- one board labeled `softAP`;
-- one board labeled `injector`;
-- one board labeled `sniffer`;
+- one [M5Stack Core2 ESP32 IoT Development Kit](https://shop.m5stack.com/products/m5stack-core2-esp32-iot-development-kit) as the `softAP`;
+- one [ESP32-C3-Mini](https://www.amazon.com/ESP32-C3-Development-Bluetooth-Single-Core-Processor/dp/B0D4QD19BB) as the `injector`;
+- one [ESP32-CAM](https://lastminuteengineers.com/getting-started-with-esp32-cam/) as the `sniffer`;
 - USB data cables, not charge-only cables;
-- a laptop with VS Code or permission to install it;
+- at least one laptop with VS Code installed;
 - the `cosmos-ds` Conda environment from Lab 1;
 - the WiFi lab repository cloned locally.
 
