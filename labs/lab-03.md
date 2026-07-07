@@ -27,7 +27,7 @@ By the end of this lab, each group should be able to:
 
 ## Lab Code
 
-Use the WiFi lab repository as the source of truth:
+Use the WiFi lab repository for the firmware projects, Python tools, and example packet capture:
 
 [https://github.com/wshanmu/wifi_lab](https://github.com/wshanmu/wifi_lab)
 
@@ -78,6 +78,20 @@ Each group will use three ESP32-based boards. An ESP32 is a WiFi/Bluetooth micro
 
 Use the ESP32-CAM as the sniffer unless a TA tells you otherwise. The current sniffer firmware and CSI data path are tested on the classic ESP32 target, not on the ESP32-C3-Mini.
 
+## Group and Shared Log
+
+Form groups of three. A Windows laptop is not required for this lab.
+
+Use the [shared Google Sheet](https://docs.google.com/spreadsheets/d/17h-pmffmxZH8AygtE6UqEtIz8x_9kswIOpQA3G9yL8o/edit?gid=0#gid=0) to record:
+
+- group name and member names;
+- assigned board roles and serial ports;
+- SoftAP MAC address and WiFi channel;
+- injector fake MAC address;
+- experiment notes and final short-report link.
+
+After groups are formed, the TA will distribute one kit per group: one `softAP` board, one `injector` board, one `sniffer` board, and the needed USB cables.
+
 ## Before You Start
 
 Each group should have:
@@ -86,7 +100,7 @@ Each group should have:
 - one board labeled `injector`;
 - one board labeled `sniffer`;
 - USB data cables, not charge-only cables;
-- VS Code with the ESP-IDF extension installed;
+- a laptop with VS Code or permission to install it;
 - the `cosmos-ds` Conda environment from Lab 1;
 - the WiFi lab repository cloned locally.
 
@@ -94,7 +108,7 @@ If the boards are already pre-flashed by the TA, still read the firmware steps s
 
 ## ESP-IDF Setup
 
-ESP-IDF is Espressif's official toolchain for building, flashing, and monitoring ESP32 firmware. Set it up in this lab; the same setup will also be useful for later ESP32 labs.
+ESP-IDF is Espressif's official toolchain for building, flashing, and monitoring ESP32 firmware. Set it up in this lab; the same setup will also be useful for the July 9 IMU lab.
 
 1. Install or update [Visual Studio Code](https://code.visualstudio.com/).
 2. In VS Code, install the official **ESP-IDF** extension.
@@ -105,6 +119,31 @@ ESP-IDF is Espressif's official toolchain for building, flashing, and monitoring
 5. Install ESP-IDF and its tools using the installer.
 6. Run `ESP-IDF: Select Current ESP-IDF Version`.
 7. Run `ESP-IDF: Doctor Command` and fix any reported setup issues.
+
+### Verify ESP-IDF With Hello World
+
+Before flashing the WiFi lab firmware, verify the full build, flash, and monitor pipeline with ESP-IDF's `hello_world` example.
+
+1. Open the VS Code command palette.
+2. Run `ESP-IDF: New Project`.
+3. Choose the `hello_world` example project.
+4. Save it outside the `wifi_lab` repository, for example in a temporary `esp-idf-test` folder.
+5. Select the target:
+   - use `esp32` if testing the M5Stack Core2 or ESP32-CAM;
+   - use `esp32c3` if testing the ESP32-C3-Mini.
+6. Select the serial port for the connected board.
+7. When flashing, use UART as the flashing method.
+8. Run `ESP-IDF: Build, Flash and Start a Monitor on Your Device`.
+
+![Configure hello world project step 1]({{ site.baseurl }}/assets/images/wifi-lab/configure_hello_world_project_1.jpg)
+
+![Configure hello world project step 2]({{ site.baseurl }}/assets/images/wifi-lab/configure_hello_world_project_2.jpg)
+
+![Configure hello world project step 3]({{ site.baseurl }}/assets/images/wifi-lab/configure_hello_world_project_3.jpg)
+
+The monitor should show the `hello_world` output and then restart countdown messages.
+
+![Hello world monitor output]({{ site.baseurl }}/assets/images/wifi-lab/monitor_device_result_for_hello_world.jpg)
 
 When flashing a board, open that board's firmware folder in VS Code and select the correct target:
 
@@ -186,9 +225,50 @@ In VS Code, the ESP-IDF status bar also shows the selected serial port and targe
 
 ## Four-Hour Plan
 
-### 1:00-1:25 PM - WiFi and CSI Concepts
+### 1:00-1:10 PM - Goals and Repository Clone
 
-The TA will introduce:
+The TA will first explain the lab goals, the final expected result, and the three ESP32 roles.
+
+Then clone the lab repository:
+
+```bash
+git clone https://github.com/wshanmu/wifi_lab.git
+cd wifi_lab
+```
+
+If you already cloned the repository, update it:
+
+```bash
+git pull
+```
+
+### 1:10-1:25 PM - Groups and Kit Distribution
+
+Form groups of three. Add your group information to the [shared Google Sheet](https://docs.google.com/spreadsheets/d/17h-pmffmxZH8AygtE6UqEtIz8x_9kswIOpQA3G9yL8o/edit?gid=0#gid=0).
+
+Each group will receive one kit:
+
+- one `softAP` board;
+- one `injector` board;
+- one `sniffer` board;
+- USB data cables.
+
+Before moving on, record your group name and member names in the shared sheet.
+
+### 1:25-2:15 PM - Guided ESP-IDF Setup and Hello World Flash
+
+The TA will walk through ESP-IDF setup step by step. Each group should confirm:
+
+1. VS Code can see the ESP-IDF extension commands.
+2. ESP-IDF Doctor reports a usable installation.
+3. One board can build, flash, and monitor the `hello_world` example.
+4. The serial monitor shows readable `hello_world` output.
+
+Use the hello-world verification steps above before flashing the WiFi lab firmware. This confirms that the USB cable, driver, ESP-IDF target, flash method, and serial monitor are working.
+
+### 2:15-2:45 PM - Slides, Wireshark Demo, and Expected Result
+
+The TA will use slides to introduce:
 
 - **WiFi frame:** one structured packet on the wireless link.
 - **Channel:** the frequency slice the radio uses, such as 2.4 GHz channel 1.
@@ -199,16 +279,39 @@ The TA will introduce:
 
 Key idea: when a person moves near the injector-sniffer link, the wireless channel changes. That motion can show up as higher CSI variance.
 
-### 1:25-1:45 PM - ESP-IDF and Board Check
+The TA will also show a Wireshark demo and the expected end-to-end result:
 
-Before flashing, each group should:
+1. SoftAP is visible as a WiFi network.
+2. Injector prints `Starting injection...`.
+3. Sniffer prints CSI lines with timestamp, RSSI, MAC address, and CSI values.
+4. The Python plot shows a live CSI heatmap.
+5. The motion detector score increases when someone moves near the link.
 
-1. Confirm VS Code can see the ESP-IDF extension commands.
-2. Connect one board at a time and find its serial port.
-3. Confirm the correct target for each firmware folder: `esp32` for `softAP/`, `esp32c3` for `injector/`, and `esp32` for `sniffer/`.
-4. Decide which group channel to use. Use channel `1` unless the TA assigns another channel.
+To inspect the provided example capture yourself, install [Wireshark](https://www.wireshark.org/download.html), then open:
 
-### 1:45-2:25 PM - Configure or Verify the SoftAP Board
+```bash
+wireshark wireshark_example.pcap
+```
+
+If that command does not work, open Wireshark first and use **File > Open**.
+
+Find one beacon or data frame and inspect:
+
+- frame type;
+- source MAC address;
+- destination MAC address;
+- sequence number;
+- channel or radio metadata if available.
+
+Optional live capture: on Linux, with a compatible WiFi adapter and permission to monitor the local lab channel, you can run:
+
+```bash
+sudo ./wifi_monitor_capture.sh wlan0 1
+```
+
+Replace `wlan0` and `1` with your wireless interface and lab channel. Only capture traffic on networks and spectrum you are authorized to monitor.
+
+### 2:45-3:15 PM - Configure or Verify the SoftAP Board
 
 The SoftAP board creates the WiFi network context for the link.
 
@@ -245,7 +348,7 @@ After the SoftAP is running, it can be powered from a USB power adapter.
 
 SoftAP verification: use a phone or laptop to scan for the SoftAP SSID. You do not need to connect to the internet through it. Just confirm that the SSID appears and record the channel shown in the monitor output.
 
-### 2:25-3:00 PM - Configure or Verify the Injector Board
+### 3:15-3:40 PM - Configure or Verify the Injector Board
 
 The injector board sends spoofed 802.11 frames to create packets that the sniffer can capture.
 
@@ -280,7 +383,7 @@ Record:
 | Injector fake MAC address |  |
 | Injector channel |  |
 
-### 3:00-3:25 PM - Configure or Verify the Sniffer Board
+### 3:40-4:05 PM - Configure or Verify the Sniffer Board
 
 The sniffer board listens on the same channel and streams CSI reports over USB serial.
 
@@ -314,7 +417,7 @@ Record:
 
 Checkpoint: show the TA one live CSI line before moving on.
 
-### 3:25-3:50 PM - Live CSI Visualization
+### 4:05-4:25 PM - Live CSI Visualization
 
 Run the live CSI plot from the repository root:
 
@@ -347,7 +450,7 @@ Useful reading:
 - [Espressif Wi-Fi Channel State Information](https://docs.espressif.com/projects/esp-idf/en/stable/esp32/api-guides/wifi-driver/wifi-vendor-features.html#wi-fi-channel-state-information)
 - [Espressif Wi-Fi CSI configuration steps](https://docs.espressif.com/projects/esp-idf/en/stable/esp32/api-guides/wifi-driver/wifi-vendor-features.html#wi-fi-channel-state-information-configure)
 
-### 3:50-4:35 PM - Presence Detection Coding Task
+### 4:25-4:50 PM - Presence Detection Coding Task
 
 Open:
 
@@ -384,7 +487,7 @@ Experiment:
 - raise the threshold and watch for missed motion;
 - change `--window-size` and observe latency vs. stability.
 
-### 4:35-5:00 PM - Checkoff and Optional Wireshark Demo
+### 4:50-5:00 PM - Checkoff and Discussion
 
 Show the TA:
 
@@ -395,35 +498,9 @@ Show the TA:
 5. Presence detector running with your completed `MotionDetector.update()`.
 6. One threshold/window setting that worked reasonably well.
 
-If time remains, the TA may show a Wireshark packet capture demo on the instructor laptop.
-
-To inspect the provided example capture yourself, install [Wireshark](https://www.wireshark.org/download.html), then open:
-
-```bash
-wireshark wireshark_example.pcap
-```
-
-If that command does not work, open Wireshark first and use **File > Open**.
-
-Find one beacon or data frame and inspect:
-
-- frame type;
-- source MAC address;
-- destination MAC address;
-- sequence number;
-- channel or radio metadata if available.
-
-Optional live capture: on Linux, with a compatible WiFi adapter and permission to monitor the local lab channel, you can run:
-
-```bash
-sudo ./wifi_monitor_capture.sh wlan0 1
-```
-
-Replace `wlan0` and `1` with your wireless interface and lab channel. Only capture traffic on networks and spectrum you are authorized to monitor.
-
 ## Deliverables
 
-Submit one short group note with:
+Submit one short group note and add the link to the shared Google Sheet. Include:
 
 1. Board table: serial port, role, MAC address, and channel.
 2. Screenshot or photo of one live CSI line.
