@@ -74,35 +74,20 @@ accel[g] x= 0.012 y=-0.034 z= 0.998 | gyro[dps] x= 0.10 y=-0.20 z= 0.05
 
 In the prepared firmware, the IMU is configured for approximately 100 Hz streaming, accelerometer range `+/-4 g`, and gyroscope range `+/-1000 dps`. The Python scripts parse the serial text and plot the six channels in real time.
 
-## ESP-IDF Setup
+## Firmware Note
 
-The ESP32 firmware is pre-flashed, so this setup is mainly for understanding the toolchain and for recovery if a board needs to be reprogrammed.
+The ESP32 firmware should already be flashed for this lab. You set up ESP-IDF in Lab 3, and this lab reuses the same VS Code extension and serial-port workflow if a board needs recovery.
 
-1. Install or update [Visual Studio Code](https://code.visualstudio.com/).
-2. In VS Code, install the official **ESP-IDF** extension.
-3. Open the command palette:
-   - macOS: `Command+Shift+P`
-   - Windows/Linux: `Ctrl+Shift+P`
-4. Run `ESP-IDF: Open ESP-IDF Installation Manager`.
-5. Install ESP-IDF and its tools using the installer.
-6. Run `ESP-IDF: Select Current ESP-IDF Version`.
-7. Run `ESP-IDF: Doctor Command` and fix any reported setup issues.
-8. As a sanity check, run `ESP-IDF: New Project`, create a Hello World project, then build, flash, and monitor it.
+If a TA asks you to reflash the IMU firmware:
 
-Common troubleshooting:
+1. Open the `IMU_lab` repository in VS Code.
+2. Run `ESP-IDF: Set Espressif Device Target` and choose `esp32`.
+3. Run `ESP-IDF: Select Port to Use`.
+4. Run `ESP-IDF: Build your Project`.
+5. Run `ESP-IDF: Flash your Project`.
+6. Run `ESP-IDF: Monitor your Device` and check for `accel[g] ... gyro[dps] ...` output.
 
-- update VS Code before installing the ESP-IDF extension;
-- use a USB data cable, not a charge-only cable;
-- close any serial monitor before running a Python script, because only one program can open the port at a time;
-- select target `esp32` for the lab board;
-- avoid paths with spaces if using an older ESP-IDF version;
-- if flashing fails, unplug and reconnect the board, then select the serial port again.
-
-Official references:
-
-- [ESP-IDF Extension for VS Code installation guide](https://docs.espressif.com/projects/vscode-esp-idf-extension/en/latest/installation.html)
-- [ESP-IDF Get Started guide for ESP32](https://docs.espressif.com/projects/esp-idf/en/latest/esp32/get-started/index.html)
-- [Bosch BMI270 product page](https://www.bosch-sensortec.com/en/products/motion-sensors/imus/bmi270)
+Useful reference: [Bosch BMI270 product page](https://www.bosch-sensortec.com/en/products/motion-sensors/imus/bmi270).
 
 ## Python Setup
 
@@ -112,32 +97,21 @@ Open a terminal in the lab code folder:
 cd IMU_lab/tools
 ```
 
-Create a Python environment if you have not already done so.
-
-macOS/Linux:
+Activate the Conda environment from Lab 1 and install the IMU lab packages:
 
 ```bash
-python3 -m venv .venv
-source .venv/bin/activate
-python -m pip install --upgrade pip
+conda activate cosmos-ds
 python -m pip install -r requirements.txt
 ```
 
-Windows PowerShell:
-
-```powershell
-python -m venv .venv
-.\.venv\Scripts\Activate.ps1
-python -m pip install --upgrade pip
-python -m pip install -r requirements.txt
-```
+If `conda activate cosmos-ds` fails, return to Lab 1 and create the course environment before continuing.
 
 Find the ESP32 serial port.
 
 macOS:
 
 ```bash
-ls /dev/cu.usb* /dev/cu.SLAB* /dev/cu.wch* 2>/dev/null
+ls /dev/cu.* 2>/dev/null
 ```
 
 Windows:
@@ -362,6 +336,6 @@ Answer these briefly in your group notes:
 | No serial data | Wrong port, charge-only cable, or board not powered | Try another USB cable, check Device Manager or `/dev/cu.*`, reconnect the board. |
 | Port is busy | Another program has the serial port open | Close ESP-IDF monitor, Arduino serial monitor, PuTTY, or another Python script. |
 | Plot opens but stays flat | Board is not streaming expected text format | Ask the TA to confirm the firmware and baud rate. |
-| `ModuleNotFoundError` | Python packages not installed in the active environment | Activate the environment and run `python -m pip install -r requirements.txt`. |
+| `ModuleNotFoundError` | Python packages not installed in the active environment | Activate `cosmos-ds` and run `python -m pip install -r requirements.txt`. |
 | Qt or PyQt error | GUI backend issue | Restart the terminal, confirm `PyQt6` installed, or ask a TA for the backup computer. |
 | Classifier predictions unstable | Too few examples or motions too similar | Collect more examples and choose more distinct motions. |
