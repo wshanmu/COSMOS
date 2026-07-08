@@ -617,4 +617,45 @@ Submit one short group note and add the link to the shared Google Sheet. Include
 
 ## Optional Extension
 
-If time remains, record a 60-second still-person CSI log and look for small periodic amplitude changes from breathing. This is harder than motion detection because breathing creates a much smaller signal, but it uses the same CSI pipeline.
+If time remains, try one or more of these self-directed extensions.
+
+### Try Wireshark Yourself
+
+Install [Wireshark](https://www.wireshark.org/download.html) on your own computer and open the provided packet capture:
+
+```text
+wireshark_example.pcap
+```
+
+Inspect a few packets and identify the source MAC address, destination MAC address, frame type, and any visible signal or channel information. Compare what Wireshark shows with what the ESP32 sniffer prints in the serial monitor.
+
+### Try More ESP32 or Core2 Examples
+
+Use the ESP-IDF extension to try another official ESP-IDF example project, such as an example related to WiFi, GPIO, timers, or UART. Start from the VS Code command palette with `ESP-IDF: New Project` or `ESP-IDF: Show Examples Projects`.
+
+For the M5Stack Core2 module only, you may also explore [M5Burner](https://docs.m5stack.com/en/uiflow/m5burner/intro) and try one of the Core2 demos. Do not use M5Burner on the ESP32-CAM or ESP32-C3-Mini boards.
+
+### Look for Breathing in CSI
+
+Record a 60-second CSI log with one person sitting still near the injector-sniffer path. Breathing creates a much smaller CSI change than walking or waving, so the signal may be weak.
+
+Suggested analysis:
+
+1. Choose one or a few subcarriers that responded clearly during the motion experiment.
+2. Plot CSI amplitude over time for those subcarriers.
+3. Compare an empty-room recording with a still-person recording.
+4. Try a moving average, detrending, or background subtraction step.
+5. Look for slow periodic changes that could correspond to breathing.
+
+Write down whether the result looks stable or noisy. If you cannot see breathing clearly, explain what may make the measurement difficult, such as body position, board placement, nearby motion, reflections, or WiFi interference.
+
+### Read a WiFi Sensing Paper
+
+Read or skim [WiSee: Whole-Home Gesture Recognition Using Wireless Signals](https://wisee.cs.washington.edu/wisee_paper.pdf). Focus on the introduction and system overview first.
+
+Questions to think about:
+
+1. What signal changes does WiSee use for sensing?
+2. How is its hardware and sensing setup different from this lab?
+3. What assumptions does the paper make about the environment or users?
+4. What would be hard to reproduce in a short classroom lab?
