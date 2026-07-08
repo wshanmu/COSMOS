@@ -116,7 +116,7 @@ ESP-IDF is Espressif's official toolchain for building, flashing, and monitoring
    - macOS: `Command+Shift+P`
    - Windows/Linux: `Ctrl+Shift+P`
 4. Run `ESP-IDF: Open ESP-IDF Installation Manager`.
-5. Install ESP-IDF and its tools using the installer.
+5. Install ESP-IDF and its tools using the installer: Select the easy installation and latest version (v6.0.2)
 6. Run `ESP-IDF: Select Current ESP-IDF Version`.
 7. Run `ESP-IDF: Doctor Command` and fix any reported setup issues.
 
