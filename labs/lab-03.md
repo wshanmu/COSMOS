@@ -145,6 +145,103 @@ The monitor should show the `hello_world` output and then restart countdown mess
 
 ![Hello world monitor output]({{ site.baseurl }}/assets/images/wifi-lab/monitor_device_result_for_hello_world.jpg)
 
+### Fix VS Code `#include errors detected` Warning for ESP-IDF
+
+Sometimes VS Code shows this warning:
+
+```text
+#include errors detected. Please update your includePath.
+Squiggles are disabled for this translation unit.
+```
+
+If your firmware still builds successfully, this is usually not a code error. It usually means VS Code IntelliSense does not know the correct ESP-IDF include paths yet.
+
+#### Step 1: Build the Firmware Once
+
+Open the project folder in VS Code and build it once. After the build finishes, the project should contain:
+
+```text
+build/compile_commands.json
+```
+
+This file tells VS Code the correct include paths and compiler flags for the current ESP-IDF project.
+
+#### Step 2: Open VS Code Settings JSON
+
+Open the VS Code command palette:
+
+```text
+Ctrl + Shift + P
+```
+
+On macOS, use:
+
+```text
+Cmd + Shift + P
+```
+
+Search for:
+
+```text
+Preferences: Open Workspace Settings (JSON)
+```
+
+If that is not available, use:
+
+```text
+Preferences: Open User Settings (JSON)
+```
+
+Workspace settings are preferred because they apply only to this project.
+
+#### Step 3: Add the Correct Settings
+
+For Windows, add:
+
+```json
+{
+  "C_Cpp.default.compileCommands": "${workspaceFolder}/build/compile_commands.json",
+  "C_Cpp.default.intelliSenseMode": "windows-gcc-x64"
+}
+```
+
+For macOS with Apple Silicon, add:
+
+```json
+{
+  "C_Cpp.default.compileCommands": "${workspaceFolder}/build/compile_commands.json",
+  "C_Cpp.default.intelliSenseMode": "macos-clang-arm64"
+}
+```
+
+For macOS with an Intel chip, add:
+
+```json
+{
+  "C_Cpp.default.compileCommands": "${workspaceFolder}/build/compile_commands.json",
+  "C_Cpp.default.intelliSenseMode": "macos-clang-x64"
+}
+```
+
+For Linux, add:
+
+```json
+{
+  "C_Cpp.default.compileCommands": "${workspaceFolder}/build/compile_commands.json",
+  "C_Cpp.default.intelliSenseMode": "linux-gcc-x64"
+}
+```
+
+#### Step 4: Reload VS Code
+
+After saving `settings.json`, reload VS Code from the command palette:
+
+```text
+Developer: Reload Window
+```
+
+The warning should disappear. You should also be able to jump into ESP-IDF APIs: use `Ctrl` + click or right-click on Windows/Linux, or `Cmd` + click on macOS, on a function such as `esp_wifi_set_channel` to inspect the implementation and API usage.
+
 When flashing a board, open that board's firmware folder in VS Code and select the correct target:
 
 | Folder | Board role | Target |
