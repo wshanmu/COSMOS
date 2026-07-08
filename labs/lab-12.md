@@ -14,4 +14,10 @@ TA: Jianhao Huang / Shanmu Wang
 
 Topic: KNN, logistic regression, SVM, and decision trees for classification.
 
-Materials coming soon.
+## Materials
+
+Download the Lab 12 notebook folder from the password-protected Box materials folder:
+
+[Open notebook lab materials on Box](https://ucla.app.box.com/folder/397751133396){: .btn .btn-primary }
+
+Ask Eric for the password.

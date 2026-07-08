@@ -26,15 +26,13 @@ By the end of this lab, you should be able to:
 
 ## Materials
 
-Student notebook:
+Download the Lab 2 notebook folder from the password-protected Box materials folder. The folder includes the notebook and `heart_disease.csv`.
 
-[Download Lab 2 notebook]({{ site.baseurl }}/notebooks/student/Lab_02_Data_Analysis_and_Visualization/COSMOS_Lab_02_Data_Analysis_and_Visualization.ipynb){: .btn .btn-primary }
+[Open notebook lab materials on Box](https://ucla.app.box.com/folder/397751133396){: .btn .btn-primary }
 
-Dataset:
+Ask Eric for the password.
 
-[Download `heart_disease.csv` from Google Drive](https://drive.google.com/drive/folders/13PVh7dG1EK2gOH9KoGR0X43AJPoya_zq?usp=sharing){: .btn }
-
-Put `heart_disease.csv` in the same folder as the notebook before running it. The Titanic dataset is loaded directly through `seaborn`, so it does not need to be downloaded separately.
+Open the notebook from the downloaded Lab 2 folder so the relative path to `heart_disease.csv` works. The Titanic dataset is loaded directly through `seaborn`, so it does not need a separate file.
 
 ## Datasets
 

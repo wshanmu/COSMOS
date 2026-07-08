@@ -25,6 +25,14 @@ Most data science labs in this course will be distributed as Jupyter notebook sk
 
 By the end of this lab, you should have one working setup on your laptop or lab computer and be able to run the provided notebook skeleton from start to finish.
 
+## Materials
+
+Download the Lab 1 notebook folder from the password-protected Box materials folder:
+
+[Open notebook lab materials on Box](https://ucla.app.box.com/folder/397751133396){: .btn .btn-primary }
+
+Ask Eric for the password.
+
 ## Recommended Setup
 
 Use one of these setups:
@@ -189,13 +197,13 @@ Python (COSMOS DS)
 
 ### 2:35-3:20 PM - Open the Provided Notebook
 
-Download or copy the provided Lab 1 notebook skeleton into:
+Download the Lab 1 folder from Box and place it inside:
 
 ```text
 COSMOS-Cluster10/labs/lab01-python-setup/
 ```
 
-Expected file name:
+The folder should include the Lab 1 notebook skeleton. Expected file name:
 
 ```text
 lab01_python_setup.ipynb

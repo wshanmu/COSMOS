@@ -1,33 +1,35 @@
 ---
 layout: page
 title: Lab Notebooks
-description: Jupyter notebooks, lab code, and dataset download instructions.
+description: Jupyter notebooks, lab code, and dataset instructions.
 nav_order: 4
 ---
 
 # Lab Notebooks
 
-Student notebooks and lab code are hosted with the course website. Dataset files are not stored in GitHub; download them from the shared Google Drive folder and place each dataset in the same folder as the notebook or script that uses it.
+Jupyter notebook lab materials are distributed through the password-protected Box folder below. The notebook folders include the datasets needed for each lab.
 
-[Download datasets from Google Drive](https://drive.google.com/drive/folders/13PVh7dG1EK2gOH9KoGR0X43AJPoya_zq?usp=sharing){: .btn .btn-primary }
+[Open notebook lab materials on Box](https://ucla.app.box.com/folder/397751133396){: .btn .btn-primary }
+
+Ask Eric for the password.
 
 ## Student Materials
 
-| Lab | Material | Dataset files to download |
-| --- | --- | --- |
-| Lab 1 | [Python Environment and Notebook Setup]({{ site.baseurl }}/notebooks/student/Lab_01_Python_Environment_and_Notebook_Setup/COSMOS_Lab_01_Python_Environment_and_Notebook_Setup.ipynb) | None |
-| Lab 2 | [Data Analysis and Visualization]({{ site.baseurl }}/notebooks/student/Lab_02_Data_Analysis_and_Visualization/COSMOS_Lab_02_Data_Analysis_and_Visualization.ipynb) | `heart_disease.csv` |
-| Lab 4 | [IMU Activity and Gesture Recognition code](https://github.com/wshanmu/IMU_lab) | None |
-| Lab 5 | [Linear Regression and KNN Regression]({{ site.baseurl }}/notebooks/student/Lab_05_Linear_Regression_and_KNN_Regression/COSMOS_Lab_05_Linear_Regression_and_KNN_Regression.ipynb) | `energydata_complete.csv` |
-| Lab 7 | [Linear Regression Big Lab]({{ site.baseurl }}/notebooks/student/Lab_07_Linear_Regression_Big_Lab/COSMOS_Lab_07_Linear_Regression_Big_Lab.ipynb) | `AB_NYC_2019.csv` |
-| Lab 8 | [Train/Validation/Test Split and Polynomial Regression]({{ site.baseurl }}/notebooks/student/Lab_08_Train_Validation_Test_Split_and_Polynomial_Regression/COSMOS_Lab_08_Train_Validation_Test_Split_and_Polynomial_Regression.ipynb) | `dataset_1.txt`, `league_data.txt` |
-| Lab 10 | [Logistic Regression]({{ site.baseurl }}/notebooks/student/Lab_10_Logistic_Regression/COSMOS_Lab_10_Logistic_Regression.ipynb) | `nyc_airbnb.csv` |
-| Lab 12 | [Classification Big Lab]({{ site.baseurl }}/notebooks/student/Lab_12_Classification_Big_Lab/COSMOS_Lab_12_Classification_Big_Lab.ipynb) | `heartdisease.csv` |
+| Lab | Material |
+| --- | --- |
+| Lab 1 | Python Environment and Notebook Setup |
+| Lab 2 | Data Analysis and Visualization |
+| Lab 5 | Linear Regression and KNN Regression |
+| Lab 7 | Linear Regression Big Lab |
+| Lab 8 | Train/Validation/Test Split and Polynomial Regression |
+| Lab 10 | Logistic Regression |
+| Lab 12 | Classification Big Lab |
 
 ## Notes
 
-- Keep the dataset filename unchanged after downloading it.
-- Put each dataset next to the notebook or script before running it.
+- Download the full folder for the lab you are working on, then open the `.ipynb` file from that folder.
+- Keep the dataset filenames unchanged.
+- The datasets are already included in the notebook lab folders on Box.
 - If a notebook cannot find a dataset, check the current working directory in Jupyter with:
 
   ```python

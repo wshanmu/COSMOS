@@ -26,15 +26,13 @@ By the end of this lab, you should be able to:
 
 ## Materials
 
-Student notebook:
+Download the Lab 5 notebook folder from the password-protected Box materials folder. The folder includes the notebook and `energydata_complete.csv`.
 
-[Download Lab 5 notebook]({{ site.baseurl }}/notebooks/student/Lab_05_Linear_Regression_and_KNN_Regression/COSMOS_Lab_05_Linear_Regression_and_KNN_Regression.ipynb){: .btn .btn-primary }
+[Open notebook lab materials on Box](https://ucla.app.box.com/folder/397751133396){: .btn .btn-primary }
 
-Dataset:
+Ask Eric for the password.
 
-[Download `energydata_complete.csv` from Google Drive](https://drive.google.com/drive/folders/13PVh7dG1EK2gOH9KoGR0X43AJPoya_zq?usp=sharing){: .btn }
-
-Put `energydata_complete.csv` in the same folder as the notebook before running it. The notebook also works if you run it from the full `COSMOS_Labs` folder layout and keep the dataset in `COSMOS_Labs/IoT_Dataset/`.
+Open the notebook from the downloaded Lab 5 folder so the relative path to `energydata_complete.csv` works.
 
 ## Dataset
 
