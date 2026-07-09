@@ -29,12 +29,12 @@ By the end of this lab, each group should be able to:
 
 Use the public IMU lab repository as the source of truth:
 
-[https://github.com/wshanmu/IMU_lab](https://github.com/wshanmu/IMU_lab)
+[https://github.com/wshanmu/IMU_lab_students](https://github.com/wshanmu/IMU_lab_students)
 
 Clone it once:
 
 ```bash
-git clone https://github.com/wshanmu/IMU_lab.git
+git clone https://github.com/wshanmu/IMU_lab_students.git
 cd IMU_lab
 ```
 
