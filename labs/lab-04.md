@@ -303,6 +303,63 @@ Student TODO: in `python_imu_segment_demo_student.py`, add summary statistics to
 - RMS energy of each channel;
 - mean absolute first difference of each channel.
 
+```python
+    def capture_instance(
+        self,
+        label: str | None,
+        samples: list[ImuSample],
+    ) -> DataInstance:
+        normalized_samples = [normalize_imu_sample(sample) for sample in samples]
+        if len(normalized_samples) < self.min_segment_samples:
+            raise RuntimeError(
+                f"Need at least {self.min_segment_samples} IMU samples; got {len(normalized_samples)}."
+            )
+
+        data = self.np.asarray(normalized_samples, dtype="float32")
+        times = data[:, 0]
+        values = data[:, 1:7]
+        duration_s = float(times[-1] - times[0])
+        if duration_s <= 0.0:
+            raise RuntimeError("Segment duration is zero.")
+        if duration_s < self.segment_seconds * self.min_segment_coverage:
+            raise RuntimeError(
+                f"Need about {self.segment_seconds:.1f} seconds of data; got {duration_s:.2f} seconds."
+            )
+
+        rel_time = times - times[0]
+        resampled = self.np.column_stack(
+            [
+                self.np.interp(self.target_time, rel_time, values[:, channel])
+                for channel in range(values.shape[1])
+            ]
+        ).astype("float32")
+
+        means = resampled.mean(axis=0)
+        centered = resampled - means
+        stds = centered.std(axis=0)
+        mins = resampled.min(axis=0)
+        maxs = resampled.max(axis=0)
+        ranges = maxs - mins
+        rms = self.np.sqrt(self.np.mean(centered * centered, axis=0))
+        diffs = self.np.diff(resampled, axis=0)
+        diff_abs_mean = self.np.mean(self.np.abs(diffs), axis=0)
+        diff_std = diffs.std(axis=0)
+
+        summary = self.np.concatenate(
+            [means, stds, mins, maxs, ranges, rms, diff_abs_mean, diff_std]
+        ).astype("float32")
+        measurements = self.np.concatenate([centered.T.reshape(-1), summary]).astype("float32")
+
+        return DataInstance(
+            label=label,
+            measurements=measurements,
+            sample_count=len(normalized_samples),
+            duration_s=duration_s,
+            raw_samples=normalized_samples,
+        )
+```
+
+
 Discussion questions:
 
 - Which three motions are easiest to separate?
