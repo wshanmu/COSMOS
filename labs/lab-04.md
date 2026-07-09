@@ -25,6 +25,8 @@ By the end of this lab, each group should be able to:
 - compare raw and smoothed trajectory estimates;
 - collect short labeled IMU motion segments and train a simple live classifier.
 
+Form a group of three and come up with a cool name: [Shared Google Sheet](https://docs.google.com/spreadsheets/d/1wGb3KYH4sK1ysYYhA1DYE0sdy-Vcq1SoBPUdvngxoZw/edit?usp=sharing).
+
 ## Lab Code
 
 Use the public IMU lab repository as the source of truth:
