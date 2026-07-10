@@ -9,7 +9,7 @@ nav_order: 4
 
 Jupyter notebook lab materials are distributed through the password-protected Box folder below. The notebook folders include the datasets needed for each lab.
 
-[Open notebook lab materials on Box](https://ucla.app.box.com/folder/397751133396){: .btn .btn-primary }
+[Open notebook lab materials on Box](https://ucla.app.box.com/s/u66n8x7bwjsilhbqhwus0spz1uexi36i){: .btn .btn-primary }
 
 Ask Eric for the password.
 
