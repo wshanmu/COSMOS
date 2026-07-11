@@ -49,7 +49,7 @@ Recommended roles:
 
 ## 1:00-1:20 PM - Repository, Groups, and Hardware
 
-Open VS Code, then open a terminal:
+Open VS Code and open your working folder, then open a terminal:
 
 ```text
 Ctrl + `
@@ -90,16 +90,24 @@ On the Windows laptop, install Universal Reader Assistant:
 3. Choose the **Typical** installation option.
 4. Launch Universal Reader Assistant after installation.
 
+![Typical Installation]({{ site.baseurl }}/assets/images/rfid-lab/typical_installation.png)
+
+
 Connect the SparkFun RFID reader:
 
 1. Connect the reader to the Windows laptop with a USB data cable.
 2. Open Universal Reader Assistant.
-3. Select the connected reader/serial device.
-4. Use the TA-provided settings screenshot for the reader options.
+3. Choose Serial Reader and select the connected reader/serial device.
+4. Choose `NA` (North America) as the region and click the `Antennas`, then click `Connect & Read`
 5. Place one RFID tag near the reader.
 6. Start reading and confirm that the tag EPC appears.
 
-> Figure placeholder: Universal Reader Assistant connection settings.
+> If you could not see the connected reader device, update the the CH340 Driver following the link: [About Installing CH340 Driver](https://learn.sparkfun.com/tutorials/how-to-install-ch340-drivers/all#drivers-if-you-need-them)
+
+![Connection Setting]({{ site.baseurl }}/assets/images/rfid-lab/connection_setting.png)
+
+![connect and read]({{ site.baseurl }}/assets/images/rfid-lab/connect_and_read.png)
+
 
 Record the EPC values for your three tags:
 
@@ -110,6 +118,14 @@ Record the EPC values for your three tags:
 | Tag 3 |  |  |
 
 Checkpoint: show the TA that Universal Reader Assistant can read at least one tag.
+
+If you need to stop and reconnect the reader from the GUI:
+1. Choose a baudrate of 115200 and Region of NA
+2. Click the antenna selection
+
+![Reconnect and read 1]({{ site.baseurl }}/assets/images/rfid-lab/reconnect_from_the_gui.png)
+
+![Reconnect and read 2]({{ site.baseurl }}/assets/images/rfid-lab/reconnect_from_the_gui_antenna.png)
 
 ## 1:50-2:20 PM - Enable TCP Export and Run Python Logger
 
@@ -131,7 +147,7 @@ In Universal Reader Assistant:
 4. Keep the export format as plain text.
 5. Start reading tags.
 
-> Figure placeholder: Universal Reader Assistant TCP export settings.
+![data export]({{ site.baseurl }}/assets/images/rfid-lab/data_export.png)
 
 ### Share the TCP Stream with Group Members
 
