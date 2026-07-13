@@ -11,7 +11,7 @@ nav_order: 6
 Date: July 13  
 Time: 1:00-5:00 PM  
 TA: Shanmu Wang  
-Hardware: SparkFun Simultaneous RFID Reader - M7E Hecto and passive UHF RFID tags  
+Hardware: [SparkFun Simultaneous RFID Reader - M7E Hecto](https://www.sparkfun.com/sparkfun-simultaneous-rfid-reader-m7e-hecto.html) and passive UHF RFID tags<br>
 Code: [RFID_Lab GitHub repository](https://github.com/wshanmu/RFID_Lab)
 
 ## Goals
@@ -55,11 +55,26 @@ Open VS Code and open your working folder, then open a terminal:
 Ctrl + `
 ```
 
-Clone the lab repository:
+For code collaboration, follow the [Git and GitHub collaboration guide]({{ site.baseurl }}/git-github/) before editing the lab files.
+
+One group member should fork the instructor repository first:
+
+[https://github.com/wshanmu/RFID_Lab](https://github.com/wshanmu/RFID_Lab)
+
+Then that group member should add the other teammates as collaborators on the fork. Each group member should clone the group fork to their own laptop, not the instructor repository directly.
+
+Replace `GROUP_OWNER_USERNAME` with the GitHub username of the teammate who created the fork:
 
 ```bash
-git clone https://github.com/wshanmu/RFID_Lab
+git clone https://github.com/GROUP_OWNER_USERNAME/RFID_Lab.git
 cd RFID_Lab
+```
+
+Then add the instructor repository as `upstream` so your group can receive updates:
+
+```bash
+git remote add upstream https://github.com/wshanmu/RFID_Lab.git
+git remote -v
 ```
 
 Activate the Conda environment from Lab 1 and install the plotting dependency:
