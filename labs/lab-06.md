@@ -356,7 +356,13 @@ Questions:
 
 A passive RFID tag can act like a crude touch point because a finger, hand, or object near the tag can change the tag's read strength or read rate. The provided GUI compares live tag readings against a short calibration baseline.
 
-The current detector uses three cues:
+The latest `touch_detector_gui.py` is intentionally a scaffold. It computes live metrics for each tag, but the actual touch decision is left for you to implement in:
+
+```python
+LiveTagMetrics._student_touch_rule(...)
+```
+
+Your detector should use three cues:
 
 - RSSI drop compared with calibration;
 - read-rate drop compared with calibration;
@@ -398,7 +404,66 @@ Run:
 python ./touch_detector_gui.py
 ```
 
-During the first 10 seconds, do not touch the tags. The GUI is calibrating each tag's baseline RSSI and read rate. After calibration, touch or cover one point at a time and watch whether the GUI marks the correct tag as `TOUCHED`.
+During the first 10 seconds, do not touch the tags. The GUI is calibrating each tag's baseline RSSI and read rate.
+
+Before you implement the rule, the GUI should run but should not reliably detect touches. The detector column may show `CLEAR` with a reason such as `student rule not implemented`. Use this first run to observe the baseline RSSI, baseline rate, current RSSI, current rate, RSSI drop, rate drop, and last-seen fields.
+
+### Implement `_student_touch_rule`
+
+Open `touch_detector_gui.py` and find:
+
+```python
+def _student_touch_rule(
+    self,
+    rssi_drop: float | None,
+    rate_drop: float | None,
+    no_read: bool,
+    was_touched: bool,
+) -> tuple[bool, str]:
+```
+
+This function must return:
+
+```python
+return is_touched, reason
+```
+
+where `is_touched` is `True` when the tag should be marked as touched, and `reason` is a short message shown in the GUI.
+
+Available inputs:
+
+| Input | Meaning |
+| --- | --- |
+| `rssi_drop` | `baseline RSSI - current RSSI`, in dB. Larger positive values mean the signal became weaker. |
+| `rate_drop` | Fractional read-rate loss from baseline. For example, `0.70` means the tag is being read 70% less often. |
+| `no_read` | `True` when this tag has not appeared recently. |
+| `was_touched` | `True` if this tag was marked touched during the previous GUI update. Use this for release/hysteresis logic. |
+
+Suggested constants already defined near the top of the file:
+
+```python
+RSSI_DROP_TOUCH_DB = 8.0
+RSSI_DROP_RELEASE_DB = 3.0
+RATE_DROP_TOUCH_FRACTION = 0.50
+RATE_DROP_RELEASE_FRACTION = 0.30
+```
+
+Your first working version should handle these cases:
+
+1. If `no_read` is `True`, usually return touched because the tag disappearing is a strong signal.
+2. If `rssi_drop` is larger than `RSSI_DROP_TOUCH_DB`, return touched.
+3. If `rate_drop` is larger than `RATE_DROP_TOUCH_FRACTION`, return touched.
+4. If `was_touched` is `True`, do not immediately switch back to clear. Wait until the signal mostly recovers, for example using `RSSI_DROP_RELEASE_DB` and `RATE_DROP_RELEASE_FRACTION`.
+5. If neither RSSI nor read-rate evidence suggests a touch, return clear.
+6. Always handle `None` values safely. For example, `rssi_drop` can be `None` if there are no current RSSI samples.
+
+After implementing the function, rerun:
+
+```bash
+python ./touch_detector_gui.py
+```
+
+Calibrate again with all tags untouched. Then touch or cover one point at a time and watch whether the GUI marks the correct tag as `TOUCHED`.
 
 ### Touch Test Table
 
@@ -413,7 +478,7 @@ During the first 10 seconds, do not touch the tags. The GUI is calibrating each 
 
 ### Improve the Detector
 
-If the detector is too sensitive or not sensitive enough, try tuning these constants in `touch_detector_gui.py`:
+After your first implementation works, make it more robust. If the detector is too sensitive or not sensitive enough, try tuning these constants in `touch_detector_gui.py`:
 
 ```python
 CALIBRATION_SECONDS = 10.0
@@ -429,8 +494,9 @@ RATE_DROP_RELEASE_FRACTION = 0.30
 Ideas for improving robustness:
 
 1. Tune the RSSI and read-rate thresholds for your own setup.
-2. Use per-tag thresholds instead of one global threshold.
-3. Use per-tag noise-aware thresholds. For example, during calibration compute the median absolute deviation (MAD) of each tag's RSSI and use:
+2. Add better release logic so the detector does not flicker between `TOUCHED` and `CLEAR`.
+3. Use per-tag thresholds instead of one global threshold.
+4. Use per-tag noise-aware thresholds. For example, during calibration compute the median absolute deviation (MAD) of each tag's RSSI and use:
 
    ```text
    threshold[tag] = max(8 dB, 3 * MAD[tag])
@@ -438,7 +504,7 @@ Ideas for improving robustness:
 
    Some tags naturally fluctuate more than others.
 
-4. Use a confidence score instead of hard OR logic:
+5. Use a confidence score instead of hard OR logic:
 
    ```text
    score = 0.55 * rssi_score + 0.35 * rate_score + 0.10 * missing_score
@@ -446,15 +512,16 @@ Ideas for improving robustness:
 
    Then display states such as `CLEAR`, `LIKELY TOUCHED`, `TOUCHED`, or `AMBIGUOUS`.
 
-5. Modify `LiveTagMetrics.finish_calibration()` if you want to compute a better baseline.
-6. Modify `LiveTagMetrics._update_touch_status()` if you want to change the decision logic.
+6. Modify `LiveTagMetrics.finish_calibration()` if you want to compute a better baseline.
+7. Keep the main decision inside `_student_touch_rule()` so your implementation is easy for the TA to inspect.
 
 Questions:
 
 1. Which point was easiest to detect?
 2. Which point was hardest to detect?
 3. Did touching one point affect the readings from nearby tags?
-4. Which change improved the detector most?
+4. Which cue was most useful in your setup: RSSI drop, read-rate drop, or no-read?
+5. Which change improved the detector most?
 
 ## 4:45-5:00 PM - Checkoff and Submission
 
@@ -465,8 +532,9 @@ Show the TA:
 3. One saved TCP log file.
 4. One distance comparison plot.
 5. One orientation or blockage comparison plot.
-6. The touch detector GUI running with your three selected tags.
-7. Your shared slide deck link in the Google Sheet.
+6. Your completed `_student_touch_rule()` implementation.
+7. The touch detector GUI running with your three selected tags.
+8. Your shared slide deck link in the Google Sheet.
 
 Your shared slide deck should include:
 
@@ -477,7 +545,8 @@ Your shared slide deck should include:
 5. Blockage experiment plot and one-sentence observation.
 6. Touch sensor layout photo or sketch.
 7. Touch sensor result table.
-8. One idea for making the RFID touch sensor more reliable.
+8. A short explanation of your `_student_touch_rule()` logic.
+9. One idea for making the RFID touch sensor more reliable.
 
 ## Troubleshooting
 
@@ -489,6 +558,7 @@ Your shared slide deck should include:
 | Log file is empty | Reader was not reading or TCP stream had no data | Start reading in Universal Reader Assistant before running the Python logger. |
 | Plot script says no matching EPC readings were found | EPC list does not match the log | Copy EPCs exactly from the terminal output or Universal Reader Assistant. |
 | GUI says `NO BASELINE` | Not enough reads during calibration | Move tags closer, improve tag orientation, or increase `CALIBRATION_SECONDS`. |
+| GUI always says `CLEAR` or `student rule not implemented` | `_student_touch_rule()` has not been completed | Implement the RSSI, read-rate, no-read, and release logic in `touch_detector_gui.py`. |
 | GUI always says `TOUCHED` | Thresholds are too sensitive or baseline was bad | Recalibrate without touching the tags, increase thresholds, or improve tag placement. |
 
 ## Core Takeaway
