@@ -29,5 +29,5 @@ July 16
 July 17
 : **Lecture** High-resolution spatial data sensing: UWB
   : Instructor: Omid Abari
-: **IoT**{: .label .label-iot } [Lab 9: UWB Ranging and CIR Sensing]({{ site.baseurl }}/labs/lab-09/)
+: **IoT**{: .label .label-iot } [Lab 9: UWB Ranging and Bimanual Activity Recognition]({{ site.baseurl }}/labs/lab-09/)
   : TA: Shanmu Wang.

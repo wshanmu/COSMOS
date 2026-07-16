@@ -1,7 +1,7 @@
 ---
 layout: page
 title: "Lab 9: UWB Ranging and Bimanual Activity Recognition"
-description: IoT lab on Qorvo DWM3001CDK UWB ranging, 50 Hz FiRa TWR configuration, KDE analysis, and two-wrist activity classification.
+description: IoT lab on Qorvo DWM3001CDK UWB ranging, FiRa TWR timing, KDE analysis, and two-wrist activity classification.
 parent: Labs
 nav_order: 9
 ---
@@ -17,7 +17,7 @@ Hardware: Qorvo DWM3001CDK boards
 
 By the end of this lab, each group should be able to:
 
-- install and run Qorvo's UWB command-line tools;
+- fork, clone, and run the UWB lab repository;
 - run FiRa two-way ranging on a pair of DWM3001CDK boards;
 - explain how FiRa ranging uses timed message exchanges and scheduling slots;
 - configure the ranging update rate to about 50 Hz;
@@ -26,28 +26,29 @@ By the end of this lab, each group should be able to:
 - collect a small two-wrist activity dataset from the inter-hand distance signal;
 - train and evaluate a classifier for bimanual activity recognition.
 
-## Materials
+## Materials and Repository
 
-Download the UWB lab materials from the password-protected Box folder:
+Use the course UWB lab repository:
 
-[Open lab materials on Box](https://ucla.app.box.com/folder/397751133396){: .btn .btn-primary }
+[Open UWB lab repository](https://github.com/UWB_Lab){: .btn .btn-primary }
 
-Ask Eric for the password.
+Each group member should fork the repository, then clone their own fork so they can edit code and push changes.
 
-Download:
+macOS/Linux:
 
-```text
-uwb-qorvo-tools.zip
-UWB_lab/
+```bash
+git clone https://github.com/YOUR_GITHUB_USERNAME/UWB_Lab.git
+cd UWB_Lab
 ```
 
-Keep the two folders next to each other after unzipping:
+Windows PowerShell:
 
-```text
-SDK/Tools/
-  uwb-qorvo-tools/
-  UWB_lab/
+```powershell
+git clone https://github.com/YOUR_GITHUB_USERNAME/UWB_Lab.git
+cd UWB_Lab
 ```
+
+After cloning, follow the `README.md` in the repository. The repository already contains the `uwb-qorvo-tools` subfolder, so you do not need to install the Qorvo tools as a separate Python package.
 
 Important references:
 
@@ -55,40 +56,29 @@ Important references:
 - `uwb-qorvo-tools/scripts/fira/run_fira_twr/STUDENT_LAB_OPERATION.md`
 - [Qorvo forum explanation of FiRa timing parameters](https://forum.qorvo.com/t/getting-fastest-distance-reading-on-dmw3001cdk/19322/2)
 
-## 1:00-1:25 PM - Install UWB Qorvo Tools
+## 1:00-1:25 PM - Clone the UWB Lab Repository
 
-The Qorvo manual's Section 1.3 shows how to install `uwb-qorvo-tools`. The manual creates a new Python virtual environment, but for this course you should reuse the Lab 1 Conda environment.
+The Qorvo manual's Section 1.3 explains the standalone Qorvo tool installation. For this course lab, do not create a new environment and do not run `python -m pip install .` for `uwb-qorvo-tools`. Use the cloned repository and follow its `README.md`.
 
-Open a terminal and go to the unzipped tool folder:
+First clone your fork if you have not already done so:
+
+macOS:
 
 ```bash
-cd path/to/SDK/Tools/uwb-qorvo-tools
+git clone https://github.com/YOUR_GITHUB_USERNAME/UWB_Lab.git
+cd UWB_Lab
 conda activate cosmos-ds
-python -m pip install --upgrade pip
-python -m pip install .
 ```
 
-Check that the tools are available:
+Windows PowerShell:
 
-```bash
-uqt_info
-uqt_ls
+```powershell
+git clone https://github.com/YOUR_GITHUB_USERNAME/UWB_Lab.git
+cd UWB_Lab
+conda activate cosmos-ds
 ```
 
-If `uqt_info` is not found, keep using direct script paths such as:
-
-```bash
-python scripts/device/get_device_info/get_device_info.py -h
-```
-
-Then install any UWB lab code dependencies if the TA-provided `UWB_lab` folder includes a `requirements.txt`:
-
-```bash
-cd ../UWB_lab
-python -m pip install -r requirements.txt
-```
-
-If there is no `requirements.txt`, continue and install missing packages only if Python reports an import error.
+Then open `README.md` and follow the setup commands there. The scripts in this repository set the needed Qorvo paths when they launch subprocesses.
 
 ## 1:25-1:45 PM - Form Groups and Identify Ports
 
@@ -151,7 +141,7 @@ $env:GROUP_ID="3"
 Check both boards:
 
 ```bash
-cd path/to/SDK/Tools/uwb-qorvo-tools
+cd UWB_Lab/uwb-qorvo-tools
 conda activate cosmos-ds
 python scripts/device/get_device_info/get_device_info.py -p $CONTROLLER_PORT
 python scripts/device/get_device_info/get_device_info.py -p $CONTROLEE_PORT
@@ -166,7 +156,7 @@ First, run the default FiRa TWR demo exactly once to confirm the boards and port
 Open two terminals. In both terminals:
 
 ```bash
-cd path/to/SDK/Tools/uwb-qorvo-tools
+cd UWB_Lab/uwb-qorvo-tools
 conda activate cosmos-ds
 ```
 
@@ -244,22 +234,25 @@ ranging interval = 200 ms
 update rate = 1000 / 200 = 5 Hz
 ```
 
-For this lab, configure about 50 Hz:
+For this lab, configure about 50 Hz, but do the calculation yourself:
 
 ```text
 target update rate = 50 Hz
-ranging interval = 1000 / 50 = 20 ms
+slot duration (ms) = slot-span / 1200
+minimum ranging-span = slot duration * slots-per-rr
+target ranging-span = 1000 / target update rate
+slot-span = 2400
 slots per ranging round = 6
-minimum slot time = 6 * 2 ms = 12 ms
-20 ms >= 12 ms, so this configuration is valid
 ```
 
-Set these variables in both terminals:
+TODO: compute a valid `RANGING_SPAN`. It must be large enough for all slots in the ranging round, and it should give about 50 Hz.
+
+Set these variables in both terminals after you fill in the TODO:
 
 ```bash
 export SLOT_SPAN=2400
 export SLOTS_PER_RR=6
-export RANGING_SPAN=20
+export RANGING_SPAN=TODO_RANGING_SPAN
 ```
 
 Windows PowerShell:
@@ -267,7 +260,7 @@ Windows PowerShell:
 ```powershell
 $env:SLOT_SPAN="2400"
 $env:SLOTS_PER_RR="6"
-$env:RANGING_SPAN="20"
+$env:RANGING_SPAN="TODO_RANGING_SPAN"
 ```
 
 Run the 50 Hz version.
@@ -302,19 +295,19 @@ python scripts/fira/run_fira_twr/run_fira_twr.py \
 The controller output should show:
 
 ```text
-ranging interval: 20 ms
+ranging interval: <your computed RANGING_SPAN> ms
 ```
 
 Question: why does reducing `--ranging-span` increase the update rate, and why must it still be larger than the required slot time?
 
 ## 2:35-3:10 PM - Collect 30-Second Ranging Logs
 
-Now collect fixed-distance logs with the higher-level `UWB_lab` wrapper. This wrapper starts both sides, saves terminal logs, parses ranging samples, and writes session folders.
+Now collect fixed-distance logs with the higher-level wrapper in your cloned `UWB_Lab` repository. This wrapper starts both sides, saves terminal logs, parses ranging samples, and writes session folders.
 
 Go to the UWB lab codebase:
 
 ```bash
-cd path/to/SDK/Tools/UWB_lab
+cd UWB_Lab
 conda activate cosmos-ds
 ```
 
@@ -361,7 +354,7 @@ Record:
 Open:
 
 ```text
-UWB_lab/analyze_ranging_results.py
+analyze_ranging_results.py
 ```
 
 Finish the TODOs for plotting the KDE distribution of the ranging logs. Your plot should show the distribution of successful distance measurements after basic filtering.
@@ -428,7 +421,6 @@ python collect_dataset.py \
   --group-id $GROUP_ID \
   --collector student01 \
   --gesture clapping,open_close_arms,passing_object,resting \
-  --input-type range \
   --trials 8 \
   --trial-duration 5 \
   --pause 3 \
@@ -447,15 +439,15 @@ During collection:
 
 ### Feature Design TODOs
 
-The codebase provides a starting feature extractor for range windows, but you should inspect and improve it.
+The codebase provides baseline range features and a proposal-feature scaffold. Inspect both before training.
 
 Look at:
 
 ```text
-UWB_lab/uwb_lab_common.py
+uwb_lab_common.py
 ```
 
-Find the range feature extraction logic and consider features such as:
+The baseline extractor already provides:
 
 - mean, standard deviation, min, max, and median distance;
 - interquartile range;
@@ -463,19 +455,28 @@ Find the range feature extraction logic and consider features such as:
 - total change over the trial;
 - mean and max step size;
 - slope over time;
-- resampled signal shape;
-- periodicity or peak-count features for repeated actions such as clapping.
+- resampled signal shape.
 
-Your group should finish the TODOs added by the TA and add at least one feature that you believe helps distinguish the chosen activities.
+The proposal extractor currently appends placeholder values. Replace those placeholders with lightweight features that you believe help distinguish your chosen activities. Useful directions include:
+
+- fraction of time the wrists are close together;
+- beginning-to-end distance change;
+- total movement amount, such as the sum of absolute distance differences;
+- number of direction changes;
+- number, depth, or spacing of valleys when the hands come together;
+- simple trend or segment-level features.
+
+Avoid expensive features that would slow down real-time evaluation.
 
 ### Train and Evaluate
 
-Train a Random Forest classifier:
+Train a baseline KNN classifier:
 
 ```bash
 python train.py datasets/gesture_dataset_YYYYMMDD_HHMMSS \
-  --input-type range \
-  --side controller
+  --side controller \
+  --classifier knn \
+  --knn-neighbors 5
 ```
 
 If your group collected separate datasets for multiple collectors, combine them:
@@ -485,7 +486,6 @@ python combine_datasets.py \
   datasets/gesture_dataset_student01 \
   datasets/gesture_dataset_student02 \
   datasets/gesture_dataset_student03 \
-  --input-type range \
   --output datasets/combined_bimanual_range
 ```
 
@@ -493,18 +493,47 @@ Train with a random split:
 
 ```bash
 python train.py datasets/combined_bimanual_range \
-  --input-type range \
-  --side controller
+  --side controller \
+  --classifier knn
+```
+
+Compare with the starter linear SVM:
+
+```bash
+python train.py datasets/combined_bimanual_range \
+  --side controller \
+  --classifier svm_linear \
+  --svm-c 1.0
+```
+
+Then compare baseline features with your proposal features:
+
+```bash
+python train.py datasets/combined_bimanual_range \
+  --side controller \
+  --feature-set baseline \
+  --classifier knn
+
+python train.py datasets/combined_bimanual_range \
+  --side controller \
+  --feature-set proposal \
+  --classifier knn
 ```
 
 Then run leave-one-user-out evaluation. For example, hold out `student03`:
 
 ```bash
 python train.py datasets/combined_bimanual_range \
-  --input-type range \
   --side controller \
   --test-collector student03
 ```
+
+Classifier TODO: add at least one additional classifier by editing `build_classifier()` in `train.py`. Good starting references:
+
+- [scikit-learn supervised learning overview](https://scikit-learn.org/stable/supervised_learning.html)
+- [RandomForestClassifier](https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestClassifier.html)
+- [DecisionTreeClassifier](https://scikit-learn.org/stable/modules/generated/sklearn.tree.DecisionTreeClassifier.html)
+- [Support Vector Machines](https://scikit-learn.org/stable/modules/svm.html)
 
 Required evaluation:
 
@@ -515,18 +544,53 @@ Required evaluation:
 
 Question: does the model still work when the test user was not in the training set?
 
+### Real-Time Classification and Majority Voting TODO
+
+After training a model, run the real-time evaluator with raw predictions:
+
+```bash
+python eval_realtime.py \
+  --model datasets/combined_bimanual_range/models/CLASSIFIER_range_YYYYMMDD_HHMMSS.joblib \
+  --controller-port $CONTROLLER_PORT \
+  --controlee-port $CONTROLEE_PORT \
+  --group-id $GROUP_ID \
+  --duration 60 \
+  --step-seconds 0.5 \
+  --vote-window 1 \
+  --visualize
+```
+
+The evaluator stores the model output in `realtime_predictions.csv`. With `--vote-window 1`, the display shows the raw prediction from each sliding window.
+
+TODO: implement `majority_vote()` in `eval_realtime.py`. After that, try:
+
+```bash
+python eval_realtime.py \
+  --model datasets/combined_bimanual_range/models/CLASSIFIER_range_YYYYMMDD_HHMMSS.joblib \
+  --controller-port $CONTROLLER_PORT \
+  --controlee-port $CONTROLEE_PORT \
+  --group-id $GROUP_ID \
+  --duration 60 \
+  --step-seconds 0.5 \
+  --vote-window 5 \
+  --visualize
+```
+
+Compare raw predictions and majority-voted predictions. What changes faster: responsiveness or stability?
+
 ## 4:40-5:00 PM - Checkoff and Submission
 
 Show the TA:
 
 1. Default `run_fira_twr.py` ranging output.
-2. 50 Hz ranging output showing a 20 ms ranging interval.
+2. 50 Hz ranging output showing the ranging interval you computed.
 3. Near-distance and far-distance 30-second session folders.
 4. KDE plots for both ranging sessions.
 5. Your selected bimanual activity classes.
 6. At least one collected activity dataset.
 7. A trained classifier summary and confusion matrix.
 8. Leave-one-user-out evaluation result, if your group collected data from multiple users.
+9. Raw realtime predictions and, after you implement it, majority-voted predictions.
 
 Submit or paste into your group notes:
 
@@ -538,7 +602,8 @@ Submit or paste into your group notes:
 6. Feature changes you made or TODOs you completed.
 7. Random split accuracy.
 8. Leave-one-user-out accuracy.
-9. One paragraph answering the research question.
+9. Realtime voting behavior, if completed.
+10. One paragraph answering the research question.
 
 ## Troubleshooting
 
@@ -547,7 +612,7 @@ Submit or paste into your group notes:
 | `get_device_info.py` does not see the board | Wrong port, cable, or board busy | Check USB cable, close other terminals, replug the board, and rerun the command. |
 | Default TWR has repeated timeouts | Ports swapped, wrong preamble, or interference | Start controlee first, confirm both boards use the same `--preamble-idx`, and move boards closer. |
 | Other groups interfere | Shared preamble or nearby UWB traffic | Use your assigned group ID as the preamble index and do not reuse another group's code. |
-| 50 Hz run fails | Timing parameters invalid or host cannot keep up | Use `--slot-span 2400`, `--slots-per-rr 6`, `--ranging-span 20`; reduce FPS if needed. |
+| 50 Hz run fails | Timing parameters invalid or host cannot keep up | Recheck the `RANGING_SPAN` calculation and confirm it is not shorter than the required slot time; reduce FPS if needed. |
 | KDE script finds no samples | Wrong session path or no `Ok` measurements | Check the session folder and inspect `controller/ranging_samples.csv` or terminal logs. |
 | Classifier accuracy is too good to be trusted | Data leakage across trials or users | Evaluate with `--test-collector` and avoid splitting windows from the same trial into both train and test. |
 | Leave-one-user-out accuracy is low | User-specific motion patterns | Collect more users, normalize features, or add features that describe motion shape rather than absolute wrist distance only. |

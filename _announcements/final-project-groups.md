@@ -3,7 +3,7 @@ title: Final Project Group Signup
 date: 2026-July-15
 ---
 
-Please form a group of 4 for the final project.
+Hi All, as mentioned, please form a group of 4 for the final project.
 
 After your group is formed, fill out the group information here:
 
