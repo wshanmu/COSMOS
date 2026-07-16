@@ -1,12 +1,12 @@
 ---
 layout: page
-title: "Lab 9: UWB Ranging and CIR Sensing"
-description: IoT lab on UWB ranging, LoS/NLoS performance, and CIR visualization using Qorvo DWM3001CDK boards.
+title: "Lab 9: UWB Ranging and Bimanual Activity Recognition"
+description: IoT lab on Qorvo DWM3001CDK UWB ranging, 50 Hz FiRa TWR configuration, KDE analysis, and two-wrist activity classification.
 parent: Labs
 nav_order: 9
 ---
 
-# Lab 9: UWB Ranging and CIR Sensing **IoT**{: .label .label-iot }
+# Lab 9: UWB Ranging and Bimanual Activity Recognition **IoT**{: .label .label-iot }
 
 Date: July 17  
 Time: 1:00-5:00 PM  
@@ -17,397 +17,541 @@ Hardware: Qorvo DWM3001CDK boards
 
 By the end of this lab, each group should be able to:
 
-- explain how UWB time-of-flight ranging estimates distance;
-- run a double-sided two-way ranging (DS-TWR) demo on DWM3001CDK boards;
-- measure ranging accuracy and stability under line-of-sight (LoS) and non-line-of-sight (NLoS) conditions;
-- compute bias, standard deviation, MAE, RMSE, P90 error, and outlier rate from ranging logs;
-- visualize channel impulse response (CIR) data as a delay-domain profile and a waterfall plot;
-- use background subtraction to highlight motion-induced CIR changes;
-- collect a small UWB sensing dataset for a simple hand-movement classification task.
+- install and run Qorvo's UWB command-line tools;
+- run FiRa two-way ranging on a pair of DWM3001CDK boards;
+- explain how FiRa ranging uses timed message exchanges and scheduling slots;
+- configure the ranging update rate to about 50 Hz;
+- collect and analyze ranging measurements at fixed distances;
+- complete a KDE plot script for ranging logs;
+- collect a small two-wrist activity dataset from the inter-hand distance signal;
+- train and evaluate a classifier for bimanual activity recognition.
 
-## Hardware
+## Materials
 
-The DWM3001CDK is Qorvo's development kit for evaluating the DWM3001C UWB module. For this lab, the most relevant board/module facts are:
+Download the UWB lab materials from the password-protected Box folder:
 
-| Item | Value |
-| --- | --- |
-| UWB module | DWM3001C, based on Qorvo DW3110 |
-| MCU | Nordic nRF52833 Cortex-M4 BLE SoC on the DWM3001C module |
-| UWB channels | Channel 5 around 6.5 GHz and channel 9 around 8 GHz |
-| Intended roles | TWR tag/anchor or TDoA tag/anchor |
-| Debug/flashing | On-board J-Link over USB |
-| Interfaces | USB connection to J-Link and DWM3001C USB interface |
-| Typical positioning use | Real-time location systems, asset tracking, and location-aware sensor networks |
+[Open lab materials on Box](https://ucla.app.box.com/folder/397751133396){: .btn .btn-primary }
 
-Official references:
+Ask Eric for the password.
 
-- [DWM3001CDK product page](https://www.qorvo.com/products/p/DWM3001CDK)
-- [DWM3001C product page](https://www.qorvo.com/products/p/DWM3001C)
-- [DW3xxx & QM3xxx SDK download](https://www.qorvo.com/products/d/da008582)
-- [UWB Product Certification Process in the USA](https://www.qorvo.com/products/d/da008185)
-- [UWB Worldwide Regulations](https://www.qorvo.com/products/d/da008184)
-
-## Recommended Group Roles
-
-- Hardware lead: connects boards, checks USB/J-Link, labels initiator/responder.
-- Firmware lead: downloads SDK, flashes prebuilt images, records serial ports.
-- Experiment lead: places boards, measures ground-truth distance, manages LoS/NLoS scenes.
-- Data lead: saves logs, plots metrics, and prepares final answers.
-
-Rotate roles between Part A and Part B if time allows.
-
-## Before Lab
-
-TA will prepare:
-
-- one pair of DWM3001CDK boards per group;
-- USB cables for both boards;
-- download link for the Qorvo SDK resources;
-- download link for a serial terminal software;
-
-Please make sure each group at least has:
-
-- one lab computer with Windows OS for setting up the SDK and flashing the firmware;
-- PuTTY on Windows, or access to the built-in `screen` command on macOS for reading serial output.
-
-### Serial Terminal Setup
-
-The DWM3001CDK prints status messages, range estimates, and debugging text over a USB serial connection. A serial terminal is the program on your laptop that opens this port and shows the text stream.
-
-Conceptually, the data path is:
+Download:
 
 ```text
-DWM3001CDK firmware -> USB virtual serial port -> PuTTY/screen -> text logs on your computer
+uwb-qorvo-tools.zip
+UWB_lab/
 ```
 
-The serial port name depends on your operating system:
+Keep the two folders next to each other after unzipping:
 
-- Windows usually names ports `COM3`, `COM4`, etc.
-- macOS usually names ports `/dev/tty.usbmodem...` or `/dev/tty.usbserial...`.
+```text
+SDK/Tools/
+  uwb-qorvo-tools/
+  UWB_lab/
+```
 
-The most important setting is the **baud rate**, which must match the firmware. In this lab, start with `115200` unless the TA gives a different value. If the baud rate or COM port is wrong, you may see no output or unreadable characters.
+Important references:
 
-<details markdown="1">
-<summary>Windows: PuTTY serial terminal</summary>
+- `UWB-Qorvo-Tools-guide.pdf`, especially Section 1.3, **Quick Start**
+- `uwb-qorvo-tools/scripts/fira/run_fira_twr/STUDENT_LAB_OPERATION.md`
+- [Qorvo forum explanation of FiRa timing parameters](https://forum.qorvo.com/t/getting-fastest-distance-reading-on-dmw3001cdk/19322/2)
 
-1. Download PuTTY from the [official PuTTY download page](https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html). The 64-bit Windows MSI installer is the easiest option for most lab computers.
-2. Connect the DWM3001CDK by USB.
-3. Open **Device Manager** -> **Ports (COM & LPT)** and find the new COM port, such as `COM5`.
-4. Open PuTTY.
-5. Under **Connection type**, select **Serial**.
-6. Set **Serial line** to your COM port, such as `COM5`.
-7. Set **Speed** to `115200`.
-8. Click **Open**.
-9. If the terminal is blank, press Enter once or reset the board.
-10. To save logs, open **Session** -> **Logging** in PuTTY before starting the experiment.
+## 1:00-1:25 PM - Install UWB Qorvo Tools
 
-PuTTY's official documentation has a short section on [connecting to a local serial line](https://the.earth.li/~sgtatham/putty/latest/htmldoc/Chapter3.html#using-serial).
-</details>
+The Qorvo manual's Section 1.3 shows how to install `uwb-qorvo-tools`. The manual creates a new Python virtual environment, but for this course you should reuse the Lab 1 Conda environment.
 
-<details markdown="1">
-<summary>macOS: Terminal and screen</summary>
+Open a terminal and go to the unzipped tool folder:
 
-1. Connect the board by USB.
-2. Open **Terminal**.
-3. List likely serial ports:
+```bash
+cd path/to/SDK/Tools/uwb-qorvo-tools
+conda activate cosmos-ds
+python -m pip install --upgrade pip
+python -m pip install .
+```
 
-   ```bash
-   ls /dev/tty.usb* /dev/tty.usbmodem* 2>/dev/null
-   ```
+Check that the tools are available:
 
-4. Open the port with `screen`, replacing the device name with the one on your laptop:
+```bash
+uqt_info
+uqt_ls
+```
 
-   ```bash
-   screen /dev/tty.usbmodemXXXX 115200
-   ```
+If `uqt_info` is not found, keep using direct script paths such as:
 
-5. If the terminal is blank, press Enter once or reset the board.
-6. To leave `screen`, press `Ctrl-A`, then `Ctrl-\`, then type `y`.
-7. To save logs, copy text from Terminal or ask the TA for a Python logging script.
+```bash
+python scripts/device/get_device_info/get_device_info.py -h
+```
 
-Apple's [Terminal User Guide](https://support.apple.com/guide/terminal/welcome/mac) is a useful reference for the macOS command-line environment.
-</details>
+Then install any UWB lab code dependencies if the TA-provided `UWB_lab` folder includes a `requirements.txt`:
 
-Further reading:
+```bash
+cd ../UWB_lab
+python -m pip install -r requirements.txt
+```
 
-- [UART overview](https://en.wikipedia.org/wiki/Universal_asynchronous_receiver-transmitter)
-- [PuTTY official documentation: serial line mode](https://the.earth.li/~sgtatham/putty/latest/htmldoc/Chapter3.html#using-serial)
-- [Apple Terminal User Guide](https://support.apple.com/guide/terminal/welcome/mac)
+If there is no `requirements.txt`, continue and install missing packages only if Python reports an import error.
 
+## 1:25-1:45 PM - Form Groups and Identify Ports
 
-## Part A: DS-TWR Ranging
+Form a group of 3.
 
-### 1:00-1:15 PM - UWB and DS-TWR Concept
+Each group receives two DWM3001CDK boards:
 
-UWB ranging estimates distance from propagation time:
+- one **controller** board;
+- one **controlee** board.
 
-`distance = speed of light * time of flight`
+Each group must use its group ID as the FiRa preamble index. This helps reduce interference when multiple groups run UWB experiments in the same room.
 
-In practice, two devices do not share a perfectly synchronized clock. Double-sided two-way ranging reduces clock-offset error by exchanging multiple timestamped messages between an initiator and a responder.
+Example:
 
-![Symmetrical double-sided two-way ranging timing diagram](https://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/Sds-twr.png/250px-Sds-twr.png)
+```text
+Group 3 -> --preamble-idx 3
+Group 8 -> --preamble-idx 8
+```
 
-Figure: a symmetrical double-sided two-way ranging timing exchange. Source: [Wikimedia Commons / SDS-TWR](https://en.wikipedia.org/wiki/Symmetrical_double-sided_two-way_ranging).
+Both boards in the same group must use the same preamble index. Do not use another group's preamble index.
 
-A useful mental model is:
+Connect both boards and find their serial ports.
 
-1. The initiator sends a ranging packet and records its transmit timestamp.
-2. The responder receives it, waits a known reply time, and sends a response.
-3. The initiator receives the response and computes a round-trip time.
-4. A second exchange in the opposite direction helps reduce clock-offset and clock-drift error.
+macOS:
 
-One common DS-TWR time-of-flight estimate uses the measured round-trip and reply intervals:
+```bash
+ls /dev/cu.usbmodem*
+```
 
-`ToF ~= (Tround1 * Tround2 - Treply1 * Treply2) / (Tround1 + Tround2 + Treply1 + Treply2)`
+Linux:
 
-Then:
+```bash
+ls /dev/serial/by-id/*
+```
 
-`distance = speed of light * ToF`
+Windows:
 
-Further reading: [Symmetrical double-sided two-way ranging](https://en.wikipedia.org/wiki/Symmetrical_double-sided_two-way_ranging).
+```text
+Device Manager -> Ports (COM & LPT)
+```
 
-Key terms:
+Set these variables in each terminal. Replace the examples with your real ports and group ID.
 
-- **LoS:** direct path between boards is visible.
-- **NLoS:** direct path is blocked, so the strongest received path may be reflected or delayed.
-- **Bias:** average signed error, `measured - true`.
-- **Stability:** how much the range estimate varies over time at a fixed distance.
+macOS/Linux:
 
-### 1:15-1:45 PM - Download SDK and Flash Prebuilt Firmware
+```bash
+export CONTROLLER_PORT=/dev/cu.usbmodemXXXXXXXX
+export CONTROLEE_PORT=/dev/cu.usbmodemYYYYYYYY
+export GROUP_ID=3
+```
 
-1. Go to the [DWM3001CDK product page](https://www.qorvo.com/products/p/DWM3001CDK).
-2. Open the **Software** section and download **DW3xxx & QM3xxx SDK**.
-3. Unzip the SDK into a folder with a short path and no spaces.
-4. Read the SDK quick-start/readme for the DWM3001CDK board.
-5. Connect two DWM3001CDK boards by USB.
-6. Identify each board's J-Link/debug interface and serial port.
-7. Flash one board with the prebuilt DS-TWR initiator firmware.
-8. Flash the second board with the prebuilt DS-TWR responder firmware.
-9. Open serial terminals for both boards and confirm that DS-TWR messages or range outputs are printing.
+Windows PowerShell:
+
+```powershell
+$env:CONTROLLER_PORT="COM5"
+$env:CONTROLEE_PORT="COM6"
+$env:GROUP_ID="3"
+```
+
+Check both boards:
+
+```bash
+cd path/to/SDK/Tools/uwb-qorvo-tools
+conda activate cosmos-ds
+python scripts/device/get_device_info/get_device_info.py -p $CONTROLLER_PORT
+python scripts/device/get_device_info/get_device_info.py -p $CONTROLEE_PORT
+```
+
+Both should report `status: Ok`.
+
+## 1:45-2:10 PM - Run the Default FiRa TWR Demo
+
+First, run the default FiRa TWR demo exactly once to confirm the boards and ports work.
+
+Open two terminals. In both terminals:
+
+```bash
+cd path/to/SDK/Tools/uwb-qorvo-tools
+conda activate cosmos-ds
+```
+
+### Terminal 1: Controlee
+
+Start the controlee first:
+
+```bash
+python scripts/fira/run_fira_twr/run_fira_twr.py \
+  -p $CONTROLEE_PORT \
+  --controlee \
+  --preamble-idx $GROUP_ID \
+  --aoa-report all-disabled \
+  -t 35
+```
+
+### Terminal 2: Controller
+
+Start the controller second:
+
+```bash
+python scripts/fira/run_fira_twr/run_fira_twr.py \
+  -p $CONTROLLER_PORT \
+  --preamble-idx $GROUP_ID \
+  --aoa-report all-disabled \
+  -t 30
+```
+
+Successful output should include:
+
+```text
+status: Ok (0x0)
+distance: <value> cm
+```
+
+Checkpoint: show the TA one live successful distance output.
+
+## 2:10-2:35 PM - Understand and Configure 50 Hz Ranging
+
+The default demo is intentionally conservative. The Qorvo forum explanation describes three timing concepts:
+
+| Concept | Meaning in this lab |
+| --- | --- |
+| Block duration / ranging interval | Time budget for one complete ranging sequence. In the script, this is controlled by `--ranging-span`, in milliseconds. |
+| Slot duration | Time allocated for one message to be sent or received. In the script, `--slot-span 2400` corresponds to about 2 ms. |
+| Slots per ranging round | Number of slots reserved for one ranging round. In the script, this is `--slots-per-rr`. |
+
+The default FiRa DS-TWR deferred mode uses scheduled messages such as:
+
+| Message | Meaning |
+| --- | --- |
+| `CM` | Control Message |
+| `RI` | Ranging Initiation |
+| `RR` | Ranging Response |
+| `RF` | Ranging Final |
+| `MR` | Measurement Report |
+| `RRR` | Ranging Result Report |
+
+For one controller and one controlee, we do not need the large default slot reservation.
+
+Default settings:
+
+```text
+--slot-span 2400
+--slots-per-rr 25
+--ranging-span 200
+```
+
+Interpretation:
+
+```text
+slot duration ~= 2 ms
+25 slots * 2 ms = 50 ms of reserved slot time
+ranging interval = 200 ms
+update rate = 1000 / 200 = 5 Hz
+```
+
+For this lab, configure about 50 Hz:
+
+```text
+target update rate = 50 Hz
+ranging interval = 1000 / 50 = 20 ms
+slots per ranging round = 6
+minimum slot time = 6 * 2 ms = 12 ms
+20 ms >= 12 ms, so this configuration is valid
+```
+
+Set these variables in both terminals:
+
+```bash
+export SLOT_SPAN=2400
+export SLOTS_PER_RR=6
+export RANGING_SPAN=20
+```
+
+Windows PowerShell:
+
+```powershell
+$env:SLOT_SPAN="2400"
+$env:SLOTS_PER_RR="6"
+$env:RANGING_SPAN="20"
+```
+
+Run the 50 Hz version.
+
+Controlee:
+
+```bash
+python scripts/fira/run_fira_twr/run_fira_twr.py \
+  -p $CONTROLEE_PORT \
+  --controlee \
+  --preamble-idx $GROUP_ID \
+  --aoa-report all-disabled \
+  --slot-span $SLOT_SPAN \
+  --slots-per-rr $SLOTS_PER_RR \
+  --ranging-span $RANGING_SPAN \
+  -t 35
+```
+
+Controller:
+
+```bash
+python scripts/fira/run_fira_twr/run_fira_twr.py \
+  -p $CONTROLLER_PORT \
+  --preamble-idx $GROUP_ID \
+  --aoa-report all-disabled \
+  --slot-span $SLOT_SPAN \
+  --slots-per-rr $SLOTS_PER_RR \
+  --ranging-span $RANGING_SPAN \
+  -t 30
+```
+
+The controller output should show:
+
+```text
+ranging interval: 20 ms
+```
+
+Question: why does reducing `--ranging-span` increase the update rate, and why must it still be larger than the required slot time?
+
+## 2:35-3:10 PM - Collect 30-Second Ranging Logs
+
+Now collect fixed-distance logs with the higher-level `UWB_lab` wrapper. This wrapper starts both sides, saves terminal logs, parses ranging samples, and writes session folders.
+
+Go to the UWB lab codebase:
+
+```bash
+cd path/to/SDK/Tools/UWB_lab
+conda activate cosmos-ds
+```
+
+Measure two distances:
+
+| Trial | True distance | Duration | Notes |
+| --- | --- | --- | --- |
+| Near | about 50 cm | 30 s | Keep boards stable. |
+| Far | as far as possible, up to 2.5 m | 30 s | Keep line of sight if possible. |
+
+Near-distance command:
+
+```bash
+python ranging_experiment_wrapper.py \
+  --controller-port $CONTROLLER_PORT \
+  --controlee-port $CONTROLEE_PORT \
+  --group-id $GROUP_ID \
+  --duration 30 \
+  --fps 50 \
+  --session-name group_${GROUP_ID}_near_50cm
+```
+
+Far-distance command:
+
+```bash
+python ranging_experiment_wrapper.py \
+  --controller-port $CONTROLLER_PORT \
+  --controlee-port $CONTROLEE_PORT \
+  --group-id $GROUP_ID \
+  --duration 30 \
+  --fps 50 \
+  --session-name group_${GROUP_ID}_far_250cm
+```
 
 Record:
 
-| Board | Role | USB/J-Link ID | Serial Port | Firmware Image |
+| Session | True distance | Session folder | Mean distance | Notes |
 | --- | --- | --- | --- | --- |
-| Board A | Initiator |  |  |  |
-| Board B | Responder |  |  |  |
+| Near |  |  |  |  |
+| Far |  |  |  |  |
 
-Checkpoint: show the TA one live ranging output.
+## 3:10-3:35 PM - Finish the KDE Plot Script
 
-### 1:45-2:30 PM - LoS Ranging Measurements
+Open:
 
-Keep the boards at the same height, with antennas facing the same way when possible. Avoid touching the boards during a recording.
+```text
+UWB_lab/analyze_ranging_results.py
+```
 
-Measure these distances in LoS:
+Finish the TODOs for plotting the KDE distribution of the ranging logs. Your plot should show the distribution of successful distance measurements after basic filtering.
 
-| Trial | True Distance | Duration | Notes |
-| --- | --- | --- | --- |
-| LoS-1 | 0.5 m | 60 s | Near range |
-| LoS-2 | 1.0 m | 60 s | Baseline |
-| LoS-3 | 2.0 m | 60 s | Mid range |
-| LoS-4 | 3.0 m | 60 s | Longer range |
+Run the analysis on both sessions:
 
-For each trial:
+```bash
+python analyze_ranging_results.py sessions/group_${GROUP_ID}_near_50cm --side controller
+python analyze_ranging_results.py sessions/group_${GROUP_ID}_far_250cm --side controller
+```
 
-1. Measure the true distance with tape.
-2. Start logging range outputs to a CSV/text file.
-3. Collect at least 100 range samples if the demo update rate allows it.
-4. Save file names using this pattern:
+If your session folders were saved somewhere else, replace the paths with the actual session paths.
 
-`group##_los_distance##_trial#.csv`
+Paste the following into your group notes or slides:
 
-Suggested CSV columns:
+1. KDE plot for the near-distance trial.
+2. KDE plot for the far-distance trial.
+3. The mean and median distance from the summary JSON.
+4. One sentence comparing the two distributions.
 
-`timestamp_s, true_distance_m, measured_range_m, condition, notes`
+Questions:
 
-### 2:30-3:10 PM - NLoS Ranging Measurements
+1. Which distance had a tighter distribution?
+2. Did the measured distance show a clear bias relative to the tape-measured distance?
+3. Did any outliers appear? If so, what might have caused them?
 
-Repeat at 1 m and 2 m with controlled blockers:
+## 3:35-4:40 PM - Bimanual Activity Recognition
 
-| Trial | True Distance | Blocker | Duration |
-| --- | --- | --- | --- |
-| NLoS-1 | 1.0 m | human body between boards | 60 s |
-| NLoS-2 | 1.0 m | backpack/cardboard between boards | 60 s |
-| NLoS-3 | 2.0 m | human body between boards | 60 s |
-| NLoS-4 | 2.0 m | wall/door/furniture if available | 60 s |
+Now use UWB ranging for sensing.
 
-Keep the board positions fixed when switching from LoS to NLoS. Only add the blocker. This makes the LoS/NLoS comparison easier to interpret.
+Research question:
 
-Checkpoint question: Does NLoS mostly add noise, a positive bias, dropouts, or all three?
+> Can we recognize two-handed activities using only the distance between a person's two wrists?
 
-### 3:10-3:50 PM - Ranging Analysis
+Place one DWM3001CDK on each wrist or forearm. The classifier will use the inter-hand distance signal over time.
 
-For each trial, compute:
+Choose at least 4 activity classes. Possible classes:
 
-- sample count;
-- mean measured range;
-- bias: `mean(measured - true)`;
-- standard deviation;
-- MAE: `mean(abs(measured - true))`;
-- RMSE: `sqrt(mean((measured - true)^2))`;
-- P90 absolute error;
-- outlier rate, using `abs(error) > 0.50 m` unless the TA gives another threshold.
+- `clapping`
+- `open_close_arms`
+- `folding_towel`
+- `passing_object`
+- `stirring`
+- `putting_on_glove`
+- `tying_knot`
+- `resting`
 
-Required plots:
+Recommended starting set if time is short:
 
-1. Range time series for one LoS trial and one NLoS trial at the same distance.
-2. Boxplot of absolute error by condition.
-3. Error CDF or histogram for LoS vs NLoS.
-4. Measured range vs true distance for all LoS trials.
+```text
+clapping,open_close_arms,passing_object,resting
+```
 
-Discussion prompts:
+### Collect Data
 
-- Which condition was most accurate?
-- Which condition was most stable?
-- Did NLoS cause a consistent positive or negative error?
-- What physical effect could explain that error?
-- Would averaging more samples improve accuracy, stability, or both?
+Each group member should collect data as a separate `collector`. This makes leave-one-user-out evaluation possible.
 
-### Deeper Thinking: Bandwidth and Ranging Precision
+Example for one collector:
 
-UWB uses very wide bandwidth, and wide bandwidth corresponds to short time-domain pulses. A rough timing intuition is:
+```bash
+python collect_dataset.py \
+  --controller-port $CONTROLLER_PORT \
+  --controlee-port $CONTROLEE_PORT \
+  --group-id $GROUP_ID \
+  --collector student01 \
+  --gesture clapping,open_close_arms,passing_object,resting \
+  --input-type range \
+  --trials 8 \
+  --trial-duration 5 \
+  --pause 3 \
+  --fps 50
+```
 
-`time resolution ~= 1 / bandwidth`
+Repeat with `--collector student02` and `--collector student03` when other group members perform the activities.
 
-For a bandwidth near `500 MHz`:
+During collection:
 
-`1 / 500 MHz ~= 2 ns`
+1. Wait for the prepare cue.
+2. Start the activity only when the capture cue appears.
+3. Keep the activity consistent across trials.
+4. Reject bad trials by answering `N` when the script asks whether to keep the trial.
+5. Keep a trial only if it has enough successful range samples.
 
-Since radio waves travel at about `3 x 10^8 m/s`, a `2 ns` timing uncertainty corresponds to about:
+### Feature Design TODOs
 
-`3 x 10^8 m/s * 2 ns ~= 0.6 m`
+The codebase provides a starting feature extractor for range windows, but you should inspect and improve it.
 
-For radar-style round-trip range resolution, you often see the related expression:
+Look at:
 
-`range resolution ~= c / (2B)`
-
-which gives about `0.3 m` for `B = 500 MHz`.
-
-Discuss with your group:
-
-- Why does increasing bandwidth improve timing resolution?
-- In this lab, are we measuring a one-way propagation time, a round-trip time, or an exchange of multiple timestamped packets?
-- Is the `0.3-0.6 m` estimate a hard accuracy limit, or only a rough bin-width intuition?
-- Practical UWB systems can often report better-than-bin-width range estimates. What signal-processing steps could make that possible?
-- Why can NLoS still break the estimate even when the hardware timing resolution is good?
-
-Hint: the receiver is not only choosing a coarse sample bin. It can correlate against a known preamble, estimate the leading edge of the CIR, average repeated measurements, and apply antenna-delay calibration. These steps can improve precision in LoS, while NLoS can still cause a biased estimate because the first detectable path may not be the direct path.
-
-Further reading: [UWB ranging overview](https://en.wikipedia.org/wiki/UWB_ranging).
-
-## Part B: CIR Visualization and UWB Sensing
-
-This part uses TA-provided firmware that streams channel impulse response (CIR) data. If the firmware is not ready, complete Part A thoroughly and treat this section as a design discussion.
-
-### 3:50-4:10 PM - Flash CIR Streaming Firmware
-
-1. Save your DS-TWR logs before reflashing.
-2. Flash the TA-provided CIR firmware to the board pair.
-3. Open the serial or USB data stream specified by the TA.
-4. Confirm that frames are arriving with CIR samples.
-
-Expected CIR data format may vary. A useful format is:
-
-`timestamp_s, frame_id, sample_index, cir_real, cir_imag, cir_mag, range_m`
-
-If only magnitude is available, use:
-
-`timestamp_s, frame_id, sample_index, cir_mag, range_m`
-
-### 4:10-4:30 PM - Static CIR Profiles
-
-Collect four static scenes for 30 seconds each:
-
-| Scene | Description |
-| --- | --- |
-| baseline | no person between boards |
-| hand-near-link | hand close to the direct path |
-| body-blocking | body blocks or partially blocks the link |
-| side-reflector | person or object near the side of the link |
-
-Plot:
-
-- one CIR magnitude profile: x-axis = sample/delay bin, y-axis = magnitude;
-- average CIR profile for each static scene;
-- difference from baseline: `scene_average - baseline_average`.
-
-Discussion prompts:
-
-- Which delay bins changed the most?
-- Does the strongest peak always correspond to the first arriving path?
-- Which scene looks most different from baseline?
-
-### 4:30-4:50 PM - Waterfall Plot
-
-Create a CIR waterfall plot:
-
-- x-axis: delay bin / CIR sample index;
-- y-axis: time or frame number;
-- color: CIR magnitude or background-subtracted magnitude.
-
-Recommended processing:
-
-1. Build a matrix `X` with shape `frames x delay_bins`.
-2. Smooth each delay bin over a short moving average window if the data is noisy.
-3. Compute baseline as the average of the first 3-5 seconds with no motion.
-4. Plot `abs(X - baseline)`.
-
-Checkpoint question: What does movement look like in the waterfall plot?
-
-### 4:50-5:00 PM - Mini Sensing Dataset
-
-Collect a small dataset for one application: **hand movement classification**.
-
-Use these labels:
-
-- `none`: no movement;
-- `left_right`: hand waves left-right between boards;
-- `toward_away`: hand moves toward-away from one board;
-- `block_unblock`: hand or body blocks and unblocks the direct path.
-
-Collect 5-10 trials per label. Each trial should last 5 seconds.
-
-Suggested features:
-
-- maximum background-subtracted CIR magnitude;
-- delay bin of maximum change;
-- total changed energy across all bins;
-- early-bin energy;
-- late-bin energy;
-- energy centroid;
-- range mean and range standard deviation during the trial.
-
-Optional classifier:
-
-Train a simple kNN, logistic regression, or decision tree classifier. Report accuracy using a train/test split by trial, not by individual frame, so frames from the same trial do not appear in both train and test.
-
-## Deliverables
-
-Submit one short report per group with:
-
-1. A screenshot or copied log showing DS-TWR ranging output.
-2. A table of LoS and NLoS metrics.
-3. The four required ranging plots.
-4. One CIR profile plot.
-5. One CIR waterfall plot.
-6. If completed, one table of hand-movement classification features or classifier accuracy.
-7. Answers to the discussion prompts.
-
-## What to Conclude
-
-A strong conclusion should mention:
-
-- UWB can give stable range estimates in LoS, but accuracy depends on geometry, calibration, antenna orientation, and logging quality.
-- NLoS often increases error because the direct path is blocked or weakened and reflected paths arrive later.
-- CIR contains richer information than a single range value because it shows how received energy is distributed over delay.
-- Background subtraction turns CIR from a static channel snapshot into a simple motion-sensing signal.
-
-## Extension Ideas
-
-If your group finishes early:
-
-- repeat the experiment on channel 5 and channel 9;
-- test whether antenna orientation changes ranging bias;
-- compare mean vs median filtering for stable range output;
-- train a classifier that is tested on a different group or different location;
-- build a simple live waterfall viewer.
+```text
+UWB_lab/uwb_lab_common.py
+```
+
+Find the range feature extraction logic and consider features such as:
+
+- mean, standard deviation, min, max, and median distance;
+- interquartile range;
+- first and last distance;
+- total change over the trial;
+- mean and max step size;
+- slope over time;
+- resampled signal shape;
+- periodicity or peak-count features for repeated actions such as clapping.
+
+Your group should finish the TODOs added by the TA and add at least one feature that you believe helps distinguish the chosen activities.
+
+### Train and Evaluate
+
+Train a Random Forest classifier:
+
+```bash
+python train.py datasets/gesture_dataset_YYYYMMDD_HHMMSS \
+  --input-type range \
+  --side controller
+```
+
+If your group collected separate datasets for multiple collectors, combine them:
+
+```bash
+python combine_datasets.py \
+  datasets/gesture_dataset_student01 \
+  datasets/gesture_dataset_student02 \
+  datasets/gesture_dataset_student03 \
+  --input-type range \
+  --output datasets/combined_bimanual_range
+```
+
+Train with a random split:
+
+```bash
+python train.py datasets/combined_bimanual_range \
+  --input-type range \
+  --side controller
+```
+
+Then run leave-one-user-out evaluation. For example, hold out `student03`:
+
+```bash
+python train.py datasets/combined_bimanual_range \
+  --input-type range \
+  --side controller \
+  --test-collector student03
+```
+
+Required evaluation:
+
+1. Random train/test accuracy.
+2. Confusion matrix.
+3. Leave-one-user-out accuracy for at least one held-out collector.
+4. A short discussion of which activities are confused and why.
+
+Question: does the model still work when the test user was not in the training set?
+
+## 4:40-5:00 PM - Checkoff and Submission
+
+Show the TA:
+
+1. Default `run_fira_twr.py` ranging output.
+2. 50 Hz ranging output showing a 20 ms ranging interval.
+3. Near-distance and far-distance 30-second session folders.
+4. KDE plots for both ranging sessions.
+5. Your selected bimanual activity classes.
+6. At least one collected activity dataset.
+7. A trained classifier summary and confusion matrix.
+8. Leave-one-user-out evaluation result, if your group collected data from multiple users.
+
+Submit or paste into your group notes:
+
+1. Group ID and preamble index.
+2. Controller and controlee port names.
+3. Near and far ground-truth distances.
+4. KDE plots and summary numbers.
+5. Activity labels and number of accepted trials per label.
+6. Feature changes you made or TODOs you completed.
+7. Random split accuracy.
+8. Leave-one-user-out accuracy.
+9. One paragraph answering the research question.
+
+## Troubleshooting
+
+| Problem | Likely cause | Fix |
+| --- | --- | --- |
+| `get_device_info.py` does not see the board | Wrong port, cable, or board busy | Check USB cable, close other terminals, replug the board, and rerun the command. |
+| Default TWR has repeated timeouts | Ports swapped, wrong preamble, or interference | Start controlee first, confirm both boards use the same `--preamble-idx`, and move boards closer. |
+| Other groups interfere | Shared preamble or nearby UWB traffic | Use your assigned group ID as the preamble index and do not reuse another group's code. |
+| 50 Hz run fails | Timing parameters invalid or host cannot keep up | Use `--slot-span 2400`, `--slots-per-rr 6`, `--ranging-span 20`; reduce FPS if needed. |
+| KDE script finds no samples | Wrong session path or no `Ok` measurements | Check the session folder and inspect `controller/ranging_samples.csv` or terminal logs. |
+| Classifier accuracy is too good to be trusted | Data leakage across trials or users | Evaluate with `--test-collector` and avoid splitting windows from the same trial into both train and test. |
+| Leave-one-user-out accuracy is low | User-specific motion patterns | Collect more users, normalize features, or add features that describe motion shape rather than absolute wrist distance only. |
+
+## Core Takeaway
+
+UWB ranging is not only useful for localization. A time series of inter-device distance can become a sensing signal. In this lab, the same FiRa TWR measurements are first evaluated as distance estimates and then reused as features for bimanual activity classification.
