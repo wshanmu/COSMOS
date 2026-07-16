@@ -357,7 +357,18 @@ Open:
 analyze_ranging_results.py
 ```
 
-Finish the TODOs for plotting the KDE distribution of the ranging logs. Your plot should show the distribution of successful distance measurements after basic filtering.
+Finish the TODOs for visualizing the KDE distribution of the ranging logs. Your plot should show the distribution of successful distance measurements after basic filtering.
+
+You may use either approach:
+
+- compute the KDE density yourself, then call Matplotlib to draw the curve;
+- call Seaborn's KDE plotting function directly on the filtered distance values.
+
+Useful API references:
+
+- [Matplotlib `pyplot.plot`](https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.plot.html)
+- [Matplotlib `pyplot.hist`](https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.hist.html)
+- [Seaborn `kdeplot`](https://seaborn.pydata.org/generated/seaborn.kdeplot.html)
 
 Run the analysis on both sessions:
 
@@ -394,18 +405,15 @@ Place one DWM3001CDK on each wrist or forearm. The classifier will use the inter
 Choose at least 4 activity classes. Possible classes:
 
 - `clapping`
-- `open_close_arms`
-- `folding_towel`
-- `passing_object`
-- `stirring`
-- `putting_on_glove`
-- `tying_knot`
+- `T_arms`
+- `boxing`
+- `clock_circle`
 - `resting`
 
 Recommended starting set if time is short:
 
 ```text
-clapping,open_close_arms,passing_object,resting
+clapping,T_arms,boxing,resting
 ```
 
 ### Collect Data
@@ -420,10 +428,10 @@ python collect_dataset.py \
   --controlee-port $CONTROLEE_PORT \
   --group-id $GROUP_ID \
   --collector student01 \
-  --gesture clapping,open_close_arms,passing_object,resting \
-  --trials 8 \
-  --trial-duration 5 \
-  --pause 3 \
+  --gesture clapping,T_arms,boxing,resting \
+  --trials 10 \
+  --trial-duration 3 \
+  --pause 2 \
   --fps 50
 ```
 
@@ -533,7 +541,7 @@ Classifier TODO: add at least one additional classifier by editing `build_classi
 - [scikit-learn supervised learning overview](https://scikit-learn.org/stable/supervised_learning.html)
 - [RandomForestClassifier](https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestClassifier.html)
 - [DecisionTreeClassifier](https://scikit-learn.org/stable/modules/generated/sklearn.tree.DecisionTreeClassifier.html)
-- [Support Vector Machines](https://scikit-learn.org/stable/modules/svm.html)
+- [Support Vector Machines (with different kernels)](https://scikit-learn.org/stable/modules/svm.html)
 
 Required evaluation:
 
