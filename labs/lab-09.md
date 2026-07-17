@@ -85,6 +85,20 @@ cd UWB_lab
 conda activate cosmos-ds
 ```
 
+Create a new Conda Python Environment:
+
+```bash
+conda create -n py39 python=3.9
+conda activate py39
+```
+
+```bash
+cd uwb-qorvo-tools
+pip install -e .
+pip install -e lib/uqt-utils/
+pip install -e lib/uwb-uci/
+```
+
 The Qorvo manual explains how to install the Qorvo tools as a standalone package. For this lab, use the provided course repository instead. The scripts in this repository set the needed Qorvo paths when they launch subprocesses.
 
 ### Step 2: Form a Group and Record the Assignment
