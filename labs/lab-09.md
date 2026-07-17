@@ -41,7 +41,7 @@ macOS/Linux:
 ```bash
 git clone https://github.com/YOUR_GITHUB_USERNAME/UWB_lab.git
 cd UWB_lab
-conda activate cosmos-ds
+conda activate py39
 ```
 
 Windows PowerShell:
@@ -49,7 +49,7 @@ Windows PowerShell:
 ```powershell
 git clone https://github.com/YOUR_GITHUB_USERNAME/UWB_lab.git
 cd UWB_lab
-conda activate cosmos-ds
+conda activate py39
 ```
 
 After cloning, follow the `README.md` in the repository. The repository already contains the `uwb-qorvo-tools` subfolder, so you do not need to install the Qorvo tools as a separate Python package.
@@ -82,7 +82,7 @@ Fork the UWB lab repository to your own GitHub account, then clone your fork. Do
 ```bash
 git clone https://github.com/YOUR_GITHUB_USERNAME/UWB_lab.git
 cd UWB_lab
-conda activate cosmos-ds
+conda activate py39
 ```
 
 Create a new Conda Python Environment:
@@ -172,7 +172,7 @@ From the cloned repository root:
 
 ```bash
 cd uwb-qorvo-tools
-conda activate cosmos-ds
+conda activate py39
 python scripts/device/get_device_info/get_device_info.py -p $CONTROLLER_PORT
 python scripts/device/get_device_info/get_device_info.py -p $CONTROLEE_PORT
 ```
@@ -197,7 +197,7 @@ Open two terminals. In both terminals, enter the Qorvo tool folder from the repo
 
 ```bash
 cd uwb-qorvo-tools
-conda activate cosmos-ds
+conda activate py39
 ```
 
 Start the controlee first.
@@ -365,7 +365,7 @@ Use the higher-level wrapper in the cloned `UWB_lab` repository. This wrapper st
 Open a terminal in the `UWB_lab` repository root, which is the folder containing `ranging_experiment_wrapper.py`, and activate the environment:
 
 ```bash
-conda activate cosmos-ds
+conda activate py39
 ```
 
 Measure two distances:
