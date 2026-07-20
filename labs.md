@@ -20,7 +20,7 @@ The course alternates between data science labs and IoT labs. DS labs are marked
 | [Lab 6]({{ site.baseurl }}/labs/lab-06/) | **IoT**{: .label .label-iot } | July 13 | RFID Reader |
 | [Lab 7]({{ site.baseurl }}/labs/lab-07/) | **DS**{: .label .label-ds } | July 14 | Linear regression big lab |
 | [Lab 8]({{ site.baseurl }}/labs/lab-08/) | **DS**{: .label .label-ds } | July 16 | Train/validation/test split and polynomial regression |
-| [Lab 9]({{ site.baseurl }}/labs/lab-09/) | **IoT**{: .label .label-iot } | July 17 | UWB ranging and CIR sensing |
+| [Lab 9]({{ site.baseurl }}/labs/lab-09/) | **IoT**{: .label .label-iot } | July 17 | UWB ranging and bimanual activity recognition |
 | [Lab 10]({{ site.baseurl }}/labs/lab-10/) | **DS**{: .label .label-ds } | July 20 | Logistic regression |
 | [Lab 11]({{ site.baseurl }}/labs/lab-11/) | **IoT**{: .label .label-iot } | July 21 | mmWave FMCW sensing |
 | [Lab 12]({{ site.baseurl }}/labs/lab-12/) | **DS**{: .label .label-ds } | July 23-24 | KNN, logistic regression, SVM, and decision trees |
