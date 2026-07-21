@@ -486,6 +486,44 @@ python eval_posture_realtime.py \
 
 More detail: `POSTURE_PIPELINE.md`.
 
+Finish the `squat_couter_gui.py` and see the squat couter with your trained model:
+```python
+    def update(self, stable_label: str | None, time_s: float) -> str:
+        """Advance standing -> squat -> standing state machine."""
+        if stable_label is None:
+            return ""
+
+        label = str(stable_label)
+        if label not in {self.standing_label, self.squat_label}:
+            return ""
+
+        if self.state == "wait_for_standing":
+            if label == self.standing_label:
+                self.state = "standing_ready"
+                return "ready"
+            return ""
+
+        if self.state == "standing_ready":
+            if label == self.squat_label:
+                self.state = "in_squat"
+                return "down"
+            return ""
+
+        if self.state == "in_squat":
+            if label == self.standing_label:
+                if time_s - self.last_count_time_s >= self.min_count_interval_s:
+                    self.count += 1
+                    self.last_count_time_s = time_s
+                    self.state = "standing_ready"
+                    return "count"
+                self.state = "standing_ready"
+                return "too_soon"
+            return ""
+
+        self.state = "wait_for_standing"
+        return ""
+```
+
 ## Optional Track C: Static Box Contents
 
 If your group finishes early, try the multi-class box-content task.
