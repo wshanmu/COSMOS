@@ -130,6 +130,22 @@ Wire the radar breakout to the USB-to-UART adapter:
 
 Do not connect `SOP0` to `GND` for this lab. That is flashing mode. Power-cycle the board after changing SOP wiring.
 
+The image step-by-step tutorial is as follows:
+
+1. Connects the male-to-female Dupont Wires to the convertor:
+![Connects the Convertor 1]({{ site.baseurl }}/assets/images/mmwave-lab/uart_convertor_connection_1.jpg)
+
+2. Split the left 4 wires (Red, black, blue, and green) and connect them to the radar board:
+![Connects the Convertor 2]({{ site.baseurl }}/assets/images/mmwave-lab/uart_convertor_connection_2.jpg)
+
+3. Then connects the board with 2 female-to-female Dupont Wires:
+![Connects the Convertor 3]({{ site.baseurl }}/assets/images/mmwave-lab/uart_convertor_connection_3.jpg)
+
+![Connects the Convertor 4]({{ site.baseurl }}/assets/images/mmwave-lab/uart_convertor_connection_4.jpg)
+
+
+
+
 ### Step 2: Find the Serial Port
 
 Use the serial port from the USB-to-UART adapter in all commands below.
