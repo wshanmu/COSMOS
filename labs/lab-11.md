@@ -28,6 +28,10 @@ By the end of this lab, each group should be able to:
 
 ## Hardware
 
+Form a group of 4 in the class sheet:
+
+[Open mmWave group sheet](https://docs.google.com/spreadsheets/d/1KR6zSG5VI2vsWlMCEB3xVNTdHWz0Z2IF1Cjx-oq-mIk/edit?usp=sharing){: .btn .btn-primary }
+
 The IWRL6432FSPEVM is a compact 60 GHz mmWave radar evaluation kit based on TI's IWRL6432 radar device. For this lab, we use the preflashed `mmwDemo` firmware and communicate with the board over a USB-to-UART adapter.
 
 | Item | Value |
