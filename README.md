@@ -24,6 +24,7 @@ Cluster 10 introduces Internet of Things systems and data science through mornin
 
 - [Calendar]({{ site.baseurl }}/calendar/)
 - [Labs]({{ site.baseurl }}/labs/)
+- [Final Project]({{ site.baseurl }}/final-project/)
 - [Paper List]({{ site.baseurl }}/papers/)
 - [Staff]({{ site.baseurl }}/staff/)
 
