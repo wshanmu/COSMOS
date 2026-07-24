@@ -161,11 +161,14 @@ Your final poster should at least show:
 - Run a small training test early, even with messy data.
 - Add gestures only after your evaluation code works.
 - Prefer a reliable 6-gesture system over an unreliable 15-gesture system with no analysis.
-- The IMU sensor might not survey 100Hz update rate if you connect a lot of USB devices. Once finish a data collection, check if the IMU sensor data make senses. If not, check the IMU lab page and code to update it to for example, 50 Hz / 25 Hz.
-- When you need to develop multiple sensor system, first do smoke test and make sure everything is good.
-- Some groups might want to use 3 UWB nodes. The correct way is to use 1 Controller and 2 Controllee. The code from the UWB lab only supports 1 Controller and 1 Controllee. You should check the device documentations and tune the command lines and parameters (such as slot number, etc.)
-- Again, different UWB boards can interfere, use the channel and preamble code assigned in the google sheet for each group
-- Similarily, make sure your mmWave radar direction is not directly pointing to other groups' radar
-- If the hardware is not responding, try replugging them first, then check the cable connections (whether the radar connections are correct on both sides, i.e., the radar board and the convertor), whether the UWB board is flashing green light, etc.
 
-We will keep updating the list. Come back and check later : )
+**Update: July 24**
+
+- The IMU may not reliably sustain a 100 Hz update rate when many USB devices are connected at the same time. After each collection session, quickly inspect the IMU timestamps and signal values. If the data looks irregular, use the IMU lab page and code as a reference and lower the IMU sampling rate, for example to 50 Hz or 25 Hz.
+- When building a multi-sensor system, run a short smoke test first. Confirm that every selected sensor can stream and save data before collecting labeled trials.
+- Some groups may want to use 3 UWB nodes. The intended setup is 1 controller and 2 controlees. The UWB lab code only supports 1 controller and 1 controlee, so you will need to read the device documentation and adjust the command-line parameters, such as slot number and ranging schedule.
+- UWB boards from different groups can interfere with each other. Use the channel and preamble code assigned to your group in the Google Sheet.
+- mmWave radars can also interfere or capture other groups' motion. Avoid pointing your radar directly at another group's setup.
+- If hardware stops responding, first unplug and reconnect the device. Then check the cable connections, including both sides of the mmWave radar wiring, the USB-to-UART adapter, and whether the UWB board shows the expected green status light.
+
+We will continue updating this list, so check this page again later.
