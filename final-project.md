@@ -4,6 +4,7 @@ title: Final Project
 description: Final project instructions for UCLA COSMOS Cluster 10.
 nav_order: 5
 permalink: /final-project/
+has_children: true
 ---
 
 # Final Project
@@ -12,6 +13,7 @@ The final project is an end-to-end IoT and data science system. Each group will 
 
 [Final project group signup form](https://docs.google.com/spreadsheets/d/1wGb3KYH4sK1ysYYhA1DYE0sdy-Vcq1SoBPUdvngxoZw/edit?usp=sharing){: .btn .btn-primary }
 [Demo Gesture Video on Box](https://ucla.app.box.com/file/2361182315011?s=aa9zjcqj5po2sgvi1b2zjyoez1ehkimw){: .btn }
+[Implementation Design Hints]({{ site.baseurl }}/final-project/implementation-design/){: .btn }
 
 ## Project Goal
 
@@ -96,6 +98,9 @@ Your final project should include:
 8. A discussion of which gestures are easy or hard to classify.
 9. A live or recorded demo.
 
+For implementation guidance, use the separate design page:
+
+[Open implementation design hints]({{ site.baseurl }}/final-project/implementation-design/){: .btn }
 
 ## Modeling Requirements
 
@@ -156,5 +161,11 @@ Your final poster should at least show:
 - Run a small training test early, even with messy data.
 - Add gestures only after your evaluation code works.
 - Prefer a reliable 6-gesture system over an unreliable 15-gesture system with no analysis.
+- The IMU sensor might not survey 100Hz update rate if you connect a lot of USB devices. Once finish a data collection, check if the IMU sensor data make senses. If not, check the IMU lab page and code to update it to for example, 50 Hz / 25 Hz.
+- When you need to develop multiple sensor system, first do smoke test and make sure everything is good.
+- Some groups might want to use 3 UWB nodes. The correct way is to use 1 Controller and 2 Controllee. The code from the UWB lab only supports 1 Controller and 1 Controllee. You should check the device documentations and tune the command lines and parameters (such as slot number, etc.)
+- Again, different UWB boards can interfere, use the channel and preamble code assigned in the google sheet for each group
+- Similarily, make sure your mmWave radar direction is not directly pointing to other groups' radar
+- If the hardware is not responding, try replugging them first, then check the cable connections (whether the radar connections are correct on both sides, i.e., the radar board and the convertor), whether the UWB board is flashing green light, etc.
 
 We will keep updating the list. Come back and check later : )
