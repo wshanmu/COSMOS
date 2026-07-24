@@ -142,6 +142,8 @@ Example evaluation questions:
 
 ## Final Poster and Demo Presentation
 
+Poster submission is due by the end of Wednesday, July 29.
+
 Your final poster should at least show:
 
 1. the sensing setup;
@@ -151,6 +153,7 @@ Your final poster should at least show:
 5. your evaluation results;
 6. one limitation and one future improvement.
 
+Final demos and presentations will take place on Saturday, August 1, during the morning session ending at 12:00 PM at the Grand Horizons Ballroom.
 
 ## Practical Tips
 
@@ -170,5 +173,14 @@ Your final poster should at least show:
 - UWB boards from different groups can interfere with each other. Use the channel and preamble code assigned to your group in the Google Sheet.
 - mmWave radars can also interfere or capture other groups' motion. Avoid pointing your radar directly at another group's setup.
 - If hardware stops responding, first unplug and reconnect the device. Then check the cable connections, including both sides of the mmWave radar wiring, the USB-to-UART adapter, and whether the UWB board shows the expected green status light.
+
+**Debugging Tips with the UWB Boards**
+
+- Make sure you are using the correct Python environment. In the UWB lab, you used a Python 3.9 environment and installed the required packages there. Use the same environment unless your group has intentionally created a new one.
+- If your group's data collection script does not work, first return to the UWB lab's `run_fira_twr` example and confirm that each board can range successfully. If the example does not work, ask Shanmu to help verify the boards.
+- If a board worked before but suddenly stops responding, unplug it and plug it back in before changing code.
+- Test the UWB setup with only two UWB boards connected directly to the laptop first. Confirm that `run_fira_twr` works, then gradually add other sensors such as the IMU and mmWave radar.
+- If the UWB boards work when plugged directly into the laptop but fail through the USB hub, ask Shanmu for help.
+- If all boards work with `run_fira_twr` but fail only when running your group's data collection script, the likely issue is in your code or command-line parameters.
 
 We will continue updating this list, so check this page again later.

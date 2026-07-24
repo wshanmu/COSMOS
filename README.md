@@ -34,4 +34,4 @@ By the end of the cluster, students should be able to collect sensor data, reaso
 
 ## Final Project
 
-Students will work in groups of 4. Project time begins in the final week after the core data science and IoT sensing labs, with a closing poster session on August 1.
+Students will work in groups of 4. Project work begins during Week 3 and continues through Week 4. Final demos and presentations are on August 1 in the Grand Horizons Ballroom.

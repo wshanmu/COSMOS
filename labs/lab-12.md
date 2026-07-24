@@ -8,9 +8,9 @@ nav_order: 12
 
 # Lab 12: Classification Big Lab **DS**{: .label .label-ds }
 
-Dates: July 23-24  
-Time: 1:00-5:00 PM  
-TA: Jianhao Huang / Shanmu Wang
+Dates: July 30-31  
+Time: 1:00-4:30 PM  
+TA: Jianhao Huang on July 30; Shanmu Wang on July 31
 
 Topic: KNN, logistic regression, SVM, and decision trees for classification.
 
