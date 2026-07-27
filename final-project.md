@@ -142,7 +142,7 @@ Example evaluation questions:
 
 ## Final Poster and Demo Presentation
 
-Poster submission is due by the end of Wednesday, July 29.
+Poster submission is due by 12:00 PM on Wednesday, July 29.
 
 Your final poster should at least show:
 
@@ -182,5 +182,14 @@ Final demos and presentations will take place on Saturday, August 1, during the 
 - Test the UWB setup with only two UWB boards connected directly to the laptop first. Confirm that `run_fira_twr` works, then gradually add other sensors such as the IMU and mmWave radar.
 - If the UWB boards work when plugged directly into the laptop but fail through the USB hub, ask Shanmu for help.
 - If all boards work with `run_fira_twr` but fail only when running your group's data collection script, the likely issue is in your code or command-line parameters.
+
+**Update: July 26**
+
+- In machine learning, "garbage in, garbage out" is a real problem. If the training data is noisy, mislabeled, or inconsistent, the model will almost certainly perform poorly. After each collection session, inspect the data before collecting more.
+- For example, for IMU data, you can choose to visualize the 3-axes accelerations. For gestures such as push and pull, check whether at least one axis shows the expected acceleration pattern. Do the same for UWB by plotting the ranging signal and checking whether the distance changes match the gesture.
+- For mmWave, you can also choose to run the near-field visualization script from the mmWave lab before collecting data. Use it to decide where the radar should point and how the gesture should be performed so that different gestures produce clearer and more distinguishable patterns.
+- The sensor update rate must be high enough to capture the motion. For example, 5 Hz UWB ranging is usually too slow to classify fast hand gestures reliably.
+- Evaluate the system in stages. A random train/test split is the easiest setting and often gives the highest accuracy. Cross-user evaluation is harder and more realistic. Real-time evaluation is usually the hardest because it adds streaming, timing, and windowing issues. If your random-split accuracy is already poor, the real-time demo is unlikely to work well.
+- For real-time evaluation, choose the window size and step size carefully. Use temporal majority voting to smooth unstable predictions. You may also try model majority voting, where several models predict from the same input and vote on the final label. Keep the model small enough to run in real time, and make the demo GUI clear enough for the audience to understand the prediction.
 
 We will continue updating this list, so check this page again later.

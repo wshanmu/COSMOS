@@ -28,7 +28,7 @@ July 29
 : **Project**{: .label .label-project } Project work
   : 1:00-4:30 PM. Instructor/TA: Omid Abari / Shanmu Wang / Jianhao Huang.
 : Poster submission due
-  : Submit posters by the end of the day.
+  : Submit posters by 12:00 PM (noon).
 
 July 30
 : **DS**{: .label .label-ds } [Lab 12: Classification Big Lab]({{ site.baseurl }}/labs/lab-12/)
