@@ -157,39 +157,70 @@ Final demos and presentations will take place on Saturday, August 1, during the 
 
 ## Practical Tips
 
-- Keep the physical setup repeatable.
-- Balance the number of trials per gesture.
-- Use clear file and folder names.
-- Save raw data and processed features separately.
-- Run a small training test early, even with messy data.
-- Add gestures only after your evaluation code works.
-- Prefer a reliable 6-gesture system over an unreliable 15-gesture system with no analysis.
+- **Build the system incrementally.**
+  - Keep the physical setup repeatable.
+  - Balance the number of trials per gesture.
+  - Use clear file and folder names.
+  - Save raw data and processed features separately.
+  - Run a small training test early, even if the first dataset is messy.
+  - Add gestures only after your evaluation code works.
+  - Prefer a reliable 6-gesture system over an unreliable 15-gesture system with no analysis.
 
-**Update: July 24**
+- **Check data quality before collecting more data.**
+  - In machine learning, "garbage in, garbage out" is a real problem. If the training data is noisy, mislabeled, or inconsistent, the model will almost certainly perform poorly.
+  - After each collection session, you can inspect the data before collecting more trials.
+  - For example, for IMU data, plot the 3-axis acceleration signals. For gestures such as push and pull, check whether at least one axis shows the expected acceleration pattern.
+  - For UWB data, plot the ranging signal and check whether the distance changes match the gesture.
+  - For mmWave data, you can run the near-field visualization script from the mmWave lab before collecting data. Use it to decide where the radar should point and how the gesture should be performed so that different gestures produce clearer and more distinguishable patterns.
 
-- The IMU may not reliably sustain a 100 Hz update rate when many USB devices are connected at the same time. After each collection session, quickly inspect the IMU timestamps and signal values. If the data looks irregular, use the IMU lab page and code as a reference and lower the IMU sampling rate, for example to 50 Hz or 25 Hz.
-- When building a multi-sensor system, run a short smoke test first. Confirm that every selected sensor can stream and save data before collecting labeled trials.
-- Some groups may want to use 3 UWB nodes. The intended setup is 1 controller and 2 controlees. The UWB lab code only supports 1 controller and 1 controlee, so you will need to read the device documentation and adjust the command-line parameters, such as slot number and ranging schedule.
-- UWB boards from different groups can interfere with each other. Use the channel and preamble code assigned to your group in the Google Sheet.
-- mmWave radars can also interfere or capture other groups' motion. Avoid pointing your radar directly at another group's setup.
-- If hardware stops responding, first unplug and reconnect the device. Then check the cable connections, including both sides of the mmWave radar wiring, the USB-to-UART adapter, and whether the UWB board shows the expected green status light.
+- **Make sure the update rate is sufficient.**
+  - The sensor update rate must be high enough to capture the motion you want to classify.
+  - For example, 5 Hz UWB ranging is usually too slow to classify fast hand gestures reliably.
+  - The IMU may not reliably sustain a 100 Hz update rate when many USB devices are connected at the same time. If the timestamps or values look irregular, lower the IMU sampling rate, for example to 50 Hz or 25 Hz.
 
-**Debugging Tips with the UWB Boards**
+- **Run smoke tests for multi-sensor setups.**
+  - Before collecting labeled trials, confirm that every selected sensor can stream and save data.
+  - If hardware stops responding, first unplug and reconnect the device.
+  - Then check cable connections, including both sides of the mmWave radar wiring, the USB-to-UART adapter, and whether the UWB board shows the expected green status light.
+  - To check whether it is the hardware issue or software issue, first run the unit-test code from each lab (e.g., `get_range_profile` from the mmWave lab)
+  - Avoid pointing your mmWave radar directly at another group's setup.
+  - Use the channel and preamble code assigned to your group in the Google Sheet to reduce UWB interference.
 
-- Make sure you are using the correct Python environment. In the UWB lab, you used a Python 3.9 environment and installed the required packages there. Use the same environment unless your group has intentionally created a new one.
-- If your group's data collection script does not work, first return to the UWB lab's `run_fira_twr` example and confirm that each board can range successfully. If the example does not work, ask Shanmu to help verify the boards.
-- If a board worked before but suddenly stops responding, unplug it and plug it back in before changing code.
-- Test the UWB setup with only two UWB boards connected directly to the laptop first. Confirm that `run_fira_twr` works, then gradually add other sensors such as the IMU and mmWave radar.
-- If the UWB boards work when plugged directly into the laptop but fail through the USB hub, ask Shanmu for help.
-- If all boards work with `run_fira_twr` but fail only when running your group's data collection script, the likely issue is in your code or command-line parameters.
+- **Debug Tips for UWB boards.**
+  - Make sure you are using the correct Python environment. In the UWB lab, you used a Python 3.9 environment and installed the required packages there.
+  - If your group's data collection script does not work, first return to the UWB lab's `run_fira_twr` example and confirm that each board can range successfully.
+  - Test the UWB setup with only two UWB boards connected directly to the laptop first. Confirm that `run_fira_twr` works, then gradually add other sensors such as the IMU and mmWave radar.
+  - If the UWB boards work when plugged directly into the laptop but fail through the USB hub, ask Shanmu for help.
+  - If all boards work with `run_fira_twr` but fail only when running your group's data collection script, the likely issue is in your code or command-line parameters.
+  - Some groups may want to use 3 UWB nodes. The intended setup is 1 controller and 2 controlees. The UWB lab code only supports 1 controller and 1 controlee, so you will need to read the device documentation and adjust command-line parameters such as slot number and ranging schedule.
 
-**Update: July 26**
+- **Evaluate in stages.**
+  - A random train/test split is the easiest setting and often gives the highest accuracy.
+  - Cross-user evaluation is harder and more realistic.
+  - Real-time evaluation is usually the hardest because it adds streaming, timing, and windowing issues.
+  - If your random-split accuracy is already poor, the real-time demo is unlikely to work well.
+  - Report more than final overall accuracy. For multi-class classification, include a confusion matrix and per-class precision/recall or F1-score. If you include a `rest` or `unknown` class, also discuss false positives and false negatives.
 
-- In machine learning, "garbage in, garbage out" is a real problem. If the training data is noisy, mislabeled, or inconsistent, the model will almost certainly perform poorly. After each collection session, inspect the data before collecting more.
-- For example, for IMU data, you can choose to visualize the 3-axes accelerations. For gestures such as push and pull, check whether at least one axis shows the expected acceleration pattern. Do the same for UWB by plotting the ranging signal and checking whether the distance changes match the gesture.
-- For mmWave, you can also choose to run the near-field visualization script from the mmWave lab before collecting data. Use it to decide where the radar should point and how the gesture should be performed so that different gestures produce clearer and more distinguishable patterns.
-- The sensor update rate must be high enough to capture the motion. For example, 5 Hz UWB ranging is usually too slow to classify fast hand gestures reliably.
-- Evaluate the system in stages. A random train/test split is the easiest setting and often gives the highest accuracy. Cross-user evaluation is harder and more realistic. Real-time evaluation is usually the hardest because it adds streaming, timing, and windowing issues. If your random-split accuracy is already poor, the real-time demo is unlikely to work well.
-- For real-time evaluation, choose the window size and step size carefully. Use temporal majority voting to smooth unstable predictions. You may also try model majority voting, where several models predict from the same input and vote on the final label. Keep the model small enough to run in real time, and make the demo GUI clear enough for the audience to understand the prediction.
+- **Use ablation studies to justify sensor fusion.**
+  - Compare single-sensor baselines against fused models, such as IMU only, UWB only, and IMU+UWB.
+  - Report whether fusion improves all gestures or mainly helps specific confusing gesture pairs.
+  - If possible, compare feature sets as well, such as raw time-window features vs handcrafted features.
+
+- **Design the real-time demo carefully.**
+  - Choose the window size and step size carefully.
+  - You can choose to use temporal majority voting to smooth unstable predictions.
+  - You may also try model majority voting, where several models predict from the same input and vote on the final label.
+  - Keep the model small enough to run in real time.
+  - Make the demo GUI clear enough for the audience to understand the current prediction (You can make it fancy!).
+  - Measure responsiveness: how long does the system take to produce the correct prediction after the gesture is performed?
+  - Once you have a real-time demo and it is working well, record a video as the backup.
+
+- **Consider optional extensions (This makes your system more robust and cooler).**
+  - Missing modality during inference: if one sensor, such as mmWave, disconnects, can the system still make a reasonable prediction?
+  - Data augmentation: for time-series data, try lightweight augmentation such as Gaussian noise, small time shifts, scaling, or time warping.
+  - You can even try [Test Time Augmentation](https://albumentations.ai/docs/4-advanced-guides/test-time-augmentation/)
+  - Varying input window size: I noticed most groups use one fixed window size, but some gestures are shorter and some are longer. So an natural extension is to make the system support varying input window input.
+  - Robustness to environment changes: if the user moves around or the surrounding multipath environment changes, does the model retain similar accuracy?
+  - False-positive testing: if the user performs an unlisted motion, such as walking or stretching, does the system incorrectly trigger a known gesture?
 
 We will continue updating this list, so check this page again later.
