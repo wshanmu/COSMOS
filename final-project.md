@@ -223,4 +223,4 @@ Final demos and presentations will take place on Saturday, August 1, during the 
   - Robustness to environment changes: if the user moves around or the surrounding multipath environment changes, does the model retain similar accuracy?
   - False-positive testing: if the user performs an unlisted motion, such as walking or stretching, does the system incorrectly trigger a known gesture?
 
-We will continue updating this list, so check this page again later.
+We will continue updating this list, so check this page again later (Latest Update: 10:50 AM, July 27).
