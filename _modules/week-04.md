@@ -31,10 +31,14 @@ July 29
   : Submit posters by 12:00 PM (noon).
 
 July 30
+: **Lecture** Open topics: Ubiquitous IoT data collection and privacy, etc.
+  : 9:00-10:30 AM. Instructor: Omid Abari.
 : **DS**{: .label .label-ds } [Lab 12: Classification Big Lab]({{ site.baseurl }}/labs/lab-12/)
   : 1:00-4:30 PM. TA: Jianhao Huang.
 
 July 31
+: **Lecture** Open topics: distributed learning, federated learning, etc.
+  : 9:00-10:30 AM. Instructor: Baharan Mirzasoleiman.
 : **DS**{: .label .label-ds } [Lab 12: Classification Big Lab]({{ site.baseurl }}/labs/lab-12/)
   : 1:00-4:30 PM. TA: Shanmu Wang.
 
