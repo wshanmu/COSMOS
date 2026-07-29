@@ -14,6 +14,7 @@ The final project is an end-to-end IoT and data science system. Each group will 
 [Final project group signup form](https://docs.google.com/spreadsheets/d/1wGb3KYH4sK1ysYYhA1DYE0sdy-Vcq1SoBPUdvngxoZw/edit?usp=sharing){: .btn .btn-primary }
 [Demo Gesture Video on Box](https://ucla.app.box.com/file/2361182315011?s=aa9zjcqj5po2sgvi1b2zjyoez1ehkimw){: .btn }
 [Implementation Design Hints]({{ site.baseurl }}/final-project/implementation-design/){: .btn }
+[Poster Submission](https://drive.google.com/drive/folders/1b6itMe4Fg8rDtE3jQCl6VvOhCxoOPGzA?usp=sharing){: .btn .bts-primary}
 
 ## Project Goal
 
