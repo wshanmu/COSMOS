@@ -143,6 +143,11 @@ Available scoring tracks:
 3. **TA, offline:** test offline on a TA.
 4. **TA, real-time:** test in real time on a TA.
 
+Definition of Offline and Real-tme:
+
+- **Offline**: The performer stays still at the beginning, and then the operator instructs the user when to start; the system records a trail and outputs the prediction based on that.
+- **Real-time**: On the operator's laptop there should be a GUI keep showing the current predictions.
+
 For each gesture, the evaluator will run **3 trials**. The score for that gesture depends on:
 
 - who performs the gesture: a group member or a TA;
