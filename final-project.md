@@ -122,9 +122,9 @@ For sensor fusion, choose one of these approaches:
 | Early fusion | Combine features from multiple sensors into one feature vector, then train one model. |
 | Late fusion | Train one model per sensor, then combine their predictions by voting or averaging probabilities. |
 
-## Evaluation Requirements
+## Evaluation Results for the Poster
 
-Report more than one number. At minimum, include:
+For your poster, also report more than the official score. Include:
 
 1. overall accuracy;
 2. confusion matrix;
@@ -132,14 +132,43 @@ Report more than one number. At minimum, include:
 4. comparison between your baseline and improved model;
 5. one short explanation of the largest failure mode.
 
-If you have data from multiple people, also evaluate one person as the held-out test user. This is more realistic than randomly mixing trials from every person into both training and testing.
+## Evaluation and Scoring Method
 
-Example evaluation questions:
+Each group must choose one official scoring track **before** system evaluation. 
 
-- Which gestures are most often confused?
-- Does the model still work on a person who was not in the training set?
-- Did adding a second sensor improve accuracy?
-- Did the second sensor help all gestures, or only some?
+Available scoring tracks:
+
+1. **Group member, offline:** test offline on one group member.
+2. **Group members, real-time:** test in real time on one group member.
+3. **TA, offline:** test offline on a TA.
+4. **TA, real-time:** test in real time on a TA.
+
+For each gesture, the evaluator will run **3 trials**. The score for that gesture depends on:
+
+- who performs the gesture: a group member or a TA;
+- how the model is evaluated: offline or real-time;
+- how many of the 3 trials are detected correctly.
+
+| Performer | Evaluation mode | Correct detections | Points per gesture |
+| --- | --- | ---: | ---: |
+| Group member | Real-time | 3 / 3 | 10 |
+| Group member | Real-time | 2 / 3 | 8 |
+| Group member | Real-time | 1 / 3 | 2 |
+| Group member | Offline | 3 / 3 | 8 |
+| Group member | Offline | 2 / 3 | 4 |
+| Group member | Offline | 1 / 3 | 2 |
+| TA | Real-time | 3 / 3 | 15 |
+| TA | Real-time | 2 / 3 | 12 |
+| TA | Real-time | 1 / 3 | 4 |
+| TA | Offline | 3 / 3 | 12 |
+| TA | Offline | 2 / 3 | 8 |
+| TA | Offline | 1 / 3 | 4 |
+
+If a gesture gets `0 / 3` correct detections, it receives 0 points for that evaluation.
+
+The final system score is the sum of the gesture scores under the group's selected official scoring track.
+
+You have one chance on both Thursday and Friday Afternoon. 
 
 ## Final Poster and Demo Presentation
 
